@@ -1,0 +1,29 @@
+{
+    "name": "libraryes",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "directories": {
+        "test": "tests",
+        "dev": ""
+    },
+    "devDependencies": {
+        "@types/express": "5.0.5",
+        "@types/node": "24.10.1",
+        "nodemon": "3.1.11",
+        "ts-node": "10.9.2",
+        "typescript": "5.9.3"
+    },
+    "scripts": {
+        "build": "tsc",
+        "dev": "nodemon --watch src --exec ts-node src/index.ts",
+        "start": "node dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "5.1.0"
+    }
+}
