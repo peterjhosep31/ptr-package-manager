@@ -11,14 +11,26 @@
     "devDependencies": {
         "@types/express": "5.0.5",
         "@types/node": "24.10.1",
+        "@typescript-eslint/eslint-plugin": "^8.48.1",
+        "@typescript-eslint/parser": "^8.48.1",
+        "@vitest/ui": "^4.0.15",
+        "eslint": "^9.39.1",
         "nodemon": "3.1.11",
         "ts-node": "10.9.2",
-        "typescript": "5.9.3"
+        "typescript": "5.9.3",
+        "vitest": "^4.0.15"
     },
     "scripts": {
         "build": "tsc",
         "dev": "nodemon --watch src --exec ts-node src/index.ts",
-        "start": "node dist/index.js"
+        "start": "node build/index.js",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:run": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "type-check": "tsc --noEmit",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix"
     },
     "keywords": [],
     "author": "",

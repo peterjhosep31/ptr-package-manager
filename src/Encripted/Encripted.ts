@@ -23,7 +23,7 @@ class Encripted {
      *
      * @type {string[]}
      */
-    private map: string[] | undefined;
+    private readonly map: string[];
 
     /**
      * Variable estática que almacena el salto (jump) utilizado para la encriptación.
@@ -58,9 +58,28 @@ class Encripted {
     }
 
     /**
-     * Genera un salto robusto y lo guarda en la base de datos si no existe.
-     *
-     * @returns {string} El salto generado o recuperado de la base de datos.
+     * Restablece el salto (jump) generando uno nuevo.
+     * Útil cuando se necesita cambiar la clave de encriptación.
+     * Todos los textos encriptados con el salto anterior no podrán desencriptarse.
+     * 
+     * @public
+     * @returns {string} El nuevo salto generado.
+     * @example
+     * const encripted = new Encripted();
+     * const newJump = encripted.resetJump();
+     * console.log("Nuevo salto:", newJump);
+     */
+    public resetJump(): string {
+        Encripted.jump = this.generateJump();
+        return Encripted.jump;
+    }
+
+    /**
+     * Obtiene el salto (jump) utilizado para la encriptación.
+     * Si no existe, genera uno nuevo mediante generateJump().
+     * 
+     * @public
+     * @returns {string} El salto generado o recuperado.
      */
     public getJump(): string {
         return this.generateJump();
@@ -68,15 +87,15 @@ class Encripted {
 
     /**
      * Genera un salto aleatorio de longitud variable entre 6 y 10 caracteres.
-     *
+     * El salto se construye seleccionando caracteres aleatorios del mapa.
+     * 
+     * @private
      * @returns {string} El salto generado aleatoriamente.
+     * @throws {CustomError} Si el mapa de caracteres no está inicializado.
      */
     private generateJump(): string {
 
         const LENGTH: number = 6 + Math.floor(Math.random() * 5); // Entre 6-10 caracteres
-
-        if (this.map === undefined)
-            throw this.errorMap();
 
         let jump = '';
         for (let i = 0; i < LENGTH; i++) {
@@ -87,28 +106,24 @@ class Encripted {
     }
 
     /**
-     * Obtiene el valor de "salt" basado en un carácter.
-     *
+     * Obtiene el valor de "salt" basado en un carácter del salto.
+     * Calcula el índice del carácter en el mapa y aplica una fórmula matemática
+     * usando potencias de PI para generar un valor de salt único.
+     * 
      * @private
      * @param {string} leap - El carácter para calcular el "salt".
      * @returns {number} El valor de "salt" calculado.
+     * @throws {CustomError} Si el mapa no está inicializado o si el salt es 0.
      */
     private getSalt(
         leap: string
     ): number {
 
-        if (this.map === undefined)
-            throw this.errorMap();
-
-        let salt: number = 0;
-
-        if (!(/\d/.test(leap))) {
-            salt = this.map.indexOf(leap) + 1;
-        }
+        let salt: number = this.map.indexOf(leap) + 1;
 
         if (salt === 0)
-            throw new CustomError("Salt is not initialized", {
-                cause: "Salt is not initialized",
+            throw new CustomError("Salt is not initialized - character not found in map", {
+                cause: `Character '${leap}' not found in character map`,
                 status: 500
             });
 
@@ -117,19 +132,21 @@ class Encripted {
 
     /**
      * Calcula los valores de "salt", "jumpValue" y "modifier" usando todos los caracteres del salto.
-     *
-     * @public
-     * @returns {Object} Objeto con las propiedades salt, jumpValue y modifier
-     * @returns {number} returns.salt - Valor de salt calculado
-     * @returns {number} returns.jumpValue - Valor de jumpValue calculado
-     * @returns {number} returns.modifier - Valor de modifier calculado
+     * Distribuye los caracteres del salto en tres valores diferentes según su posición (módulo 3).
+     * Estos valores se utilizan en los algoritmos de encriptación y desencriptación.
+     * 
+     * @private
+     * @returns {Object} Objeto con las propiedades salt, jumpValue y modifier.
+     * @returns {number} returns.salt - Valor de salt calculado (mínimo 1).
+     * @returns {number} returns.jumpValue - Valor de jumpValue calculado (mínimo 1).
+     * @returns {number} returns.modifier - Valor de modifier calculado (mínimo 1).
+     * @throws {CustomError} Si el mapa no está inicializado o si el jump no está definido.
      */
-    private calculateValues() {
-
-        if (this.map === undefined)
-            throw this.errorMap();
-
-
+    private calculateValues(): {
+        salt: number;
+        jumpValue: number;
+        modifier: number;
+    } {
 
         const JUMP = Encripted.jump;
         if (!JUMP)
@@ -181,16 +198,42 @@ class Encripted {
 
     /**
      * Encripta un texto usando el mapa de caracteres y los valores calculados.
-     *
+     * Cada carácter se desplaza en el mapa según una fórmula que incluye
+     * el salt, la posición del carácter, el jumpValue y el modifier.
+     * 
+     * @public
      * @param {string} text - Texto a encriptar.
      * @returns {string} El texto encriptado.
+     * @throws {CustomError} Si el mapa de caracteres no está inicializado.
      */
     public encrypt(
         text: string
     ): string {
 
-        if (this.map === undefined)
-            throw this.errorMap();
+        // Validación de entrada
+        if (typeof text !== 'string') {
+            throw new CustomError(
+                `Error de validación en Encripted.encrypt(): El parámetro 'text' debe ser de tipo string`,
+                {
+                    cause: "Tipo de dato inválido para el parámetro text",
+                    expected: "string",
+                    received: typeof text,
+                    status: 422
+                }
+            );
+        }
+
+        if (text.length === 0) {
+            throw new CustomError(
+                `Error de validación en Encripted.encrypt(): El parámetro 'text' no puede estar vacío`,
+                {
+                    cause: "El texto a encriptar debe contener al menos un carácter",
+                    expected: "non-empty string",
+                    received: "empty string",
+                    status: 422
+                }
+            );
+        }
 
         const {
             salt,
@@ -227,16 +270,42 @@ class Encripted {
 
     /**
      * Desencripta un texto encriptado usando el mapa de caracteres y los valores calculados.
-     *
+     * Invierte el proceso de encriptación aplicando la fórmula inversa para recuperar
+     * los caracteres originales.
+     * 
+     * @public
      * @param {string} text - Texto encriptado a desencriptar.
      * @returns {string} El texto desencriptado (original).
+     * @throws {CustomError} Si el mapa de caracteres no está inicializado.
      */
     public decrypt(
         text: string
     ): string {
 
-        if (this.map === undefined)
-            throw this.errorMap();
+        // Validación de entrada
+        if (typeof text !== 'string') {
+            throw new CustomError(
+                `Error de validación en Encripted.decrypt(): El parámetro 'text' debe ser de tipo string`,
+                {
+                    cause: "Tipo de dato inválido para el parámetro text",
+                    expected: "string",
+                    received: typeof text,
+                    status: 422
+                }
+            );
+        }
+
+        if (text.length === 0) {
+            throw new CustomError(
+                `Error de validación en Encripted.decrypt(): El parámetro 'text' no puede estar vacío`,
+                {
+                    cause: "El texto a desencriptar debe contener al menos un carácter",
+                    expected: "non-empty string",
+                    received: "empty string",
+                    status: 422
+                }
+            );
+        }
 
         const {
             salt,
@@ -271,17 +340,6 @@ class Encripted {
         }
 
         return decrypted;
-    }
-
-    private errorMap(): CustomError | void {
-        if (this.map === undefined)
-            return new CustomError("Map is not initialized", {
-                cause: "Map is not initialized",
-                received: typeof this.map,
-                expected: "string[]",
-                status: 500
-            });
-
     }
 
 }
