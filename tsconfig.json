@@ -1,10 +1,13 @@
 {
     /** Visita https://aka.ms/tsconfig para leer más sobre este archivo */
     "compilerOptions": {
-        "rootDir": "./src", // Directorio raíz de los archivos fuente
+        "rootDir": ".", // Directorio raíz de los archivos fuente
         "outDir": "./build", // Directorio de salida para los archivos compilados
-        "module": "nodenext", // Sistema de módulos a utilizar
-        "target": "esnext", // Versión de ECMAScript a utilizar
+        "module": "ESNext", // Sistema de módulos a utilizar
+        "moduleResolution": "node",
+        "target": "es2020", // Versión de ECMAScript a utilizar
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
         "lib": [
             "esnext"
         ], // Incluye las definiciones de tipo de ESNext

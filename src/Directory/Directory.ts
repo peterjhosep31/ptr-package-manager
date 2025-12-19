@@ -1,29 +1,29 @@
 import fs from "node:fs";
 import path from "node:path";
 import CustomError from "../Error/Error.ts";
-import type { DirectoryFilesReturn } from "./Types/Return.ts";
 import type { PathInfo } from "./Types/PathInfo.ts";
+import type { DirectoryFilesReturn } from "./Types/Return.ts";
 
 /**
  * Clase para gestionar operaciones sobre archivos y directorios del sistema de archivos.
- * 
+ *
  * Esta clase proporciona funcionalidades para:
  * - Verificar la existencia de archivos y directorios
  * - Crear archivos y directorios de forma recursiva
  * - Obtener información sobre rutas (nombre, directorio, extensión)
  * - Listar contenido de directorios separando archivos y subdirectorios
- * 
+ *
  * Utiliza los módulos nativos de Node.js (fs y path) para operaciones del sistema de archivos
  * y maneja errores mediante la clase CustomError para proporcionar información detallada.
- * 
+ *
  * @class DirectoryFiles
  * @version 1.0.0
  */
-class DirectoryFiles {
+class Directory {
 
     /**
      * Verifica si un directorio o archivo existe en el sistema de archivos.
-     * 
+     *
      * @param {string} pathDirectory - La ruta absoluta o relativa del directorio o archivo a verificar.
      * @param {boolean} [createIfDoesnotExist=false] - Si es true, crea la ruta si no existe.
      * @returns {boolean} true si el directorio o archivo existe (o fue creado), false en caso contrario.
@@ -71,7 +71,7 @@ class DirectoryFiles {
      * Crea un directorio o archivo según la ruta proporcionada.
      * Si la ruta incluye extensión, se considera un archivo; de lo contrario, un directorio.
      * Crea todos los directorios intermedios necesarios de forma recursiva.
-     * 
+     *
      * @param {string} pathDirectory - La ruta absoluta o relativa del directorio o archivo a crear.
      * @returns {boolean} true si el archivo fue creado exitosamente, false en caso contrario.
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -125,7 +125,7 @@ class DirectoryFiles {
     /**
      * Obtiene el nombre de archivo (incluyendo extensión) de una ruta completa.
      * Utiliza path.basename() internamente.
-     * 
+     *
      * @param {string} pathDirectory - La ruta completa del archivo.
      * @returns {string} El nombre del archivo con su extensión (ej: "archivo.txt").
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -152,7 +152,7 @@ class DirectoryFiles {
     /**
      * Obtiene la ruta del directorio padre que contiene el archivo o directorio especificado.
      * Utiliza path.dirname() internamente.
-     * 
+     *
      * @param {string} pathDirectory - La ruta completa del archivo o directorio.
      * @returns {string} La ruta del directorio padre (sin incluir el nombre del archivo).
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -179,7 +179,7 @@ class DirectoryFiles {
     /**
      * Obtiene la extensión de un archivo incluyendo el punto.
      * Utiliza path.extname() internamente.
-     * 
+     *
      * @param {string} pathDirectory - La ruta completa del archivo.
      * @returns {string} La extensión del archivo con el punto (ej: ".txt", ".js"). Cadena vacía si no tiene extensión.
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -207,7 +207,7 @@ class DirectoryFiles {
      * Crea un directorio de forma recursiva.
      * Si el directorio padre no existe, se crean todos los directorios intermedios necesarios.
      * Utiliza fs.mkdirSync() con la opción recursive.
-     * 
+     *
      * @param {string} pathDirectory - La ruta absoluta o relativa del directorio a crear.
      * @returns {void}
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -256,7 +256,7 @@ class DirectoryFiles {
     /**
      * Crea un archivo vacío en la ruta especificada.
      * El archivo se crea con contenido vacío utilizando fs.writeFileSync().
-     * 
+     *
      * @param {string} pathDirectory - La ruta absoluta o relativa del archivo a crear.
      * @returns {boolean} true si el archivo fue creado exitosamente, false en caso contrario.
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
@@ -308,7 +308,7 @@ class DirectoryFiles {
     /**
      * Obtiene y clasifica el contenido de un directorio.
      * Lee el contenido del directorio y lo separa en dos arrays: uno para subdirectorios y otro para archivos.
-     * 
+     *
      * @param {string} directory - La ruta absoluta o relativa del directorio a leer.
      * @returns {DirectoryFilesReturn} Objeto con dos propiedades:
      *   - directories: Array con las rutas completas de los subdirectorios.
@@ -354,7 +354,7 @@ class DirectoryFiles {
     /**
      * Obtiene información completa de una ruta de archivo o directorio.
      * Proporciona todos los componentes de la ruta en un objeto estructurado.
-     * 
+     *
      * @param {string} pathDirectory - La ruta completa del archivo o directorio.
      * @returns {PathInfo} Objeto con la información completa de la ruta:
      *   - full: Ruta completa original
@@ -392,4 +392,4 @@ class DirectoryFiles {
     }
 }
 
-export default DirectoryFiles;
+export default Directory;

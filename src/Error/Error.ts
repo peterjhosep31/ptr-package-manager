@@ -21,7 +21,7 @@ import type { ErrorParams } from "./Types/Params.ts";
  */
 class CustomError extends Error {
 
-    public static override name: string;
+    public override name: string;
 
     private _cause?: string;
     private _expected?: string;

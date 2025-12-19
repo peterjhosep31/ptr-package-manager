@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it } from 'vitest';
-import DirectoryFiles from '../src/DirectoryFiles/DirectoryFiles.ts';
+import DirectoryFiles from '../src/Directory/Directory';
 import CustomError from '../src/Error/Error.ts';
 
 const __filename = fileURLToPath(import.meta.url);

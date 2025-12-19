@@ -3,30 +3,30 @@ import type { CharactersAllowed, Format } from "./Types/Format.ts";
 
 /**
  * Clase para manipulación y formato de timestamps (fechas representadas en segundos).
- * 
+ *
  * Esta clase proporciona funcionalidades para:
  * - Obtener el timestamp actual en segundos
  * - Convertir timestamps a fechas formateadas con patrones personalizados
  * - Calcular diferencias entre timestamps
  * - Formatear fechas según caracteres específicos (Y, m, d, H, i, s)
- * 
+ *
  * Los timestamps se manejan en segundos desde el 1 de enero de 1970 (Unix epoch).
  * El formato de fecha soporta caracteres: Y (año), m (mes), d (día), H (hora), i (minutos), s (segundos)
  * y separadores: espacio, guión (-), dos puntos (:), barra (/).
- * 
+ *
  * La clase es inmutable una vez instanciada (Object.freeze) y se exporta como singleton.
- * 
+ *
  * @class Timestamp
  * @version 1.0.0
  */
 class Timestamp {
 
-    public static name: string;
+    public name: string;
 
     /**
      * Instancia interna de Date utilizada para formatear fechas.
      * Se utiliza solo durante el proceso de conversión y formateo.
-     * 
+     *
      * @private
      * @type {Date|undefined}
      */
@@ -35,18 +35,18 @@ class Timestamp {
     /**
      * Constructor de la clase Timestamp.
      * Inicializa el nombre estático de la clase.
-     * 
+     *
      * @constructor
      */
 
     public constructor() {
-        // Constructor vacío - el nombre se asigna automáticamente
+        this.name = "Timestamp";
     }
 
 
     /**
      * Obtiene el timestamp actual en segundos desde el 1 de enero de 1970 (Unix epoch).
-     * 
+     *
      * @returns {number} Timestamp actual en segundos (entero, sin milisegundos).
      * @example
      * const now = timestamp.get();
@@ -70,7 +70,7 @@ class Timestamp {
      * - i: Minutos con 2 dígitos (00-59)
      * - s: Segundos con 2 dígitos (00-59)
      * - Separadores permitidos: espacio, guion (-), dos puntos (:), barra (/)
-     * 
+     *
      * @param {Format} format - Patrón de formato (ej: "Y-m-d H:i:s", "d/m/Y").
      * @param {number} timestamp - Timestamp en segundos. Si no se proporciona o es 0, usa el timestamp actual.
      * @returns {string} Fecha formateada según el patrón especificado.
@@ -97,7 +97,7 @@ class Timestamp {
 
     /**
      * Calcula la diferencia en segundos entre dos timestamps.
-     * 
+     *
      * @param {number} start - Timestamp inicial (punto de partida).
      * @param {number|null} [end=null] - Timestamp final. Si es null o no se proporciona, usa el timestamp actual.
      * @returns {number} Diferencia en segundos (end - start). Puede ser negativo si start es posterior a end.
@@ -123,7 +123,7 @@ class Timestamp {
      * Formatea la fecha interna (#date) según el patrón indicado.
      * Método privado utilizado internamente por convertToDate.
      * Valida que el formato no contenga caracteres duplicados y solo use caracteres permitidos.
-     * 
+     *
      * @private
      * @param {Format} format - Patrón de formato con caracteres Y, m, d, H, i, s y separadores.
      * @returns {string} Fecha formateada.
@@ -166,7 +166,7 @@ class Timestamp {
     /**
      * Obtiene el valor correspondiente al carácter de formato para la fecha interna.
      * Método privado que extrae componentes individuales de la fecha.
-     * 
+     *
      * @private
      * @param {CharactersAllowed} character - Carácter de formato: 'Y', 'm', 'd', 'H', 'i' o 's'.
      * @returns {string} Valor formateado con dos dígitos (excepto Y que retorna 4 dígitos).
