@@ -17,10 +17,16 @@ import RequestNotProcessed from "./Manager/RequestNotProcessed.ts";
 
     switch (comman) {
 
+        /**
+         * Comando de ayuda: Muestra todos los comandos disponibles
+         */
         case "--help":
             (new RequestNotProcessed()).getCommands();
             break;
 
+        /**
+         * Comando de instalación: Instala las dependencias o componentes necesarios
+         */
         case "install":
         case "i":
             console.log("Installing...");

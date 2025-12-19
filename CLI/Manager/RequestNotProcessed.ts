@@ -1,3 +1,4 @@
+import CustomError from "../../src/Error/Error.ts";
 import Files from "../../src/Files/Files.ts";
 
 class RequestNotProcessed {
@@ -8,27 +9,38 @@ class RequestNotProcessed {
 
     getCommands() {
 
-        this.readFileRouter();
+        const COMMANTS = this.readFileRouter();
+        console.log(COMMANTS);
+
+
     }
 
-    readFileRouter() {
+    readFileRouter(): string[] | undefined {
 
         const FILES = new Files();
 
-        const CONTENTED: string | null =
+        const CONTENTED: string =
             FILES.readFile(process.cwd() + '/CLI/index.ts');
 
-        const LINES: (string | undefined)[] | undefined = CONTENTED?.split('\n').filter(
-            line => line.trim() !== '' && line.includes('case')
-        ).map((line) => {
-            const parts = line.split('"');
-            // console.log(parts)
-            return parts[1];
-        })
-
-        console.log(LINES);
+        if (CONTENTED.length === 0)
+            throw new CustomError('File content is empty');
 
 
+        const COMMANTS: string[] | undefined
+            = CONTENTED?.split('\n').filter(
+                line => line.trim() !== '' && line.includes('case')
+            ).map((line) => {
+
+                const parts = line.split('"');
+                if (parts?.[1] && typeof parts[1] === 'string')
+                    return parts[1];
+                return null;
+            }).filter(
+                (command): command is string => command !== null
+            );
+
+
+        return COMMANTS;
     }
 
 }

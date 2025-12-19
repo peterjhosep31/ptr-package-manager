@@ -12,13 +12,12 @@ class Files {
 
     readFile(
         filePath: string
-    ): string | null {
+    ): string {
 
         if (!this.DIRECTORY.exists(filePath))
             throw new CustomError('File does not exist', {
                 cause: `File not found: ${filePath}`
             });
-
 
         try {
 
