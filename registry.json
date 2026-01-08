@@ -1,0 +1,46 @@
+{
+    "packages": {
+        "directory": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/directory",
+                    "dependencies": {},
+                    "published": "2026-01-04T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
+        "files": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/files",
+                    "dependencies": {
+                        "directory": "^1.0.0"
+                    },
+                    "published": "2026-01-04T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
+        "encripted": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/encripted",
+                    "dependencies": {},
+                    "published": "2026-01-04T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
+        "timestamp": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/timestamp",
+                    "dependencies": {},
+                    "published": "2026-01-04T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        }
+    }
+}

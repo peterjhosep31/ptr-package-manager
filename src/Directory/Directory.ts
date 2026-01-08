@@ -130,16 +130,16 @@ class Directory {
      * @returns {string} El nombre del archivo con su extensión (ej: "archivo.txt").
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
      * @example
-     * fileName("/home/user/documentos/archivo.txt") // Retorna: "archivo.txt"
+     * baseName ("/home/user/documentos/archivo.txt") // Retorna: "archivo.txt"
      */
-    public fileName(
+    public baseName(
         pathDirectory: string
     ): string {
         if (typeof pathDirectory !== "string")
             throw new CustomError(
-                `Error de validación en DirectoryFiles.fileName(): El parámetro 'pathDirectory' debe ser de tipo string`,
+                `Error de validación en DirectoryFiles.baseName (): El parámetro 'pathDirectory' debe ser de tipo string`,
                 {
-                    cause: "Tipo de dato inválido para el parámetro pathDirectory",
+                    cause: "Tipo    dato inválido para el parámetro pathDirectory",
                     expected: "string",
                     received: typeof pathDirectory,
                     status: 422 // Unprocessable Entity - Error de validación de parámetros
@@ -386,7 +386,7 @@ class Directory {
         return {
             full: pathDirectory,
             directory: this.directoryPath(pathDirectory),
-            filename: this.fileName(pathDirectory),
+            filename: this.baseName(pathDirectory),
             extension: this.extension(pathDirectory)
         };
     }

@@ -1,5 +1,11 @@
 import CustomError from "../../src/Error/Error.ts";
 import Files from "../../src/Files/Files.ts";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Obtener __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class RequestNotProcessed {
 
@@ -10,35 +16,54 @@ class RequestNotProcessed {
     getCommands() {
 
         const COMMANTS = this.readFileRouter();
-        console.log(COMMANTS);
 
+        // Mostrar título
+        console.log('\n\x1b[1m\x1b[36m📋 Comandos Disponibles\x1b[0m\n');
+        console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m');
 
+        // Mostrar encabezados
+        console.log(`  \x1b[1m\x1b[33m${'Comando'.padEnd(15)}\x1b[0m \x1b[90m│\x1b[0m \x1b[1m\x1b[33mDescripción\x1b[0m`);
+        console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m');
+
+        // Mostrar cada comando
+        COMMANTS.forEach((cmd: any) => {
+            console.log(`  \x1b[1m\x1b[32m${cmd.commant.padEnd(15)}\x1b[0m \x1b[90m│\x1b[0m \x1b[37m${cmd.description}\x1b[0m`);
+        });
+
+        console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m\n');
     }
 
-    readFileRouter(): string[] | undefined {
+    readFileRouter(): Object[] {
 
         const FILES = new Files();
 
-        const CONTENTED: string =
-            FILES.readFile(process.cwd() + '/CLI/index.ts');
+        // Leemos el archivo de entrada usando ruta absoluta desde la ubicación del script
+        const CLI_PATH = path.join(__dirname, '../index.ts');
+        const CONTENTED: string = FILES.readFile(CLI_PATH);
 
         if (CONTENTED.length === 0)
-            throw new CustomError('File content is empty');
+            throw new CustomError('Archivo vacío');
 
+        let copyDescription: string;
 
-        const COMMANTS: string[] | undefined
-            = CONTENTED?.split('\n').filter(
-                line => line.trim() !== '' && line.includes('case')
-            ).map((line) => {
+        const COMMANTS: Object[] = CONTENTED?.split('\n')
+            .filter(
+                line => line.trim() && line.includes('case')
+            ).map(
+                line => {
 
-                const parts = line.split('"');
-                if (parts?.[1] && typeof parts[1] === 'string')
-                    return parts[1];
-                return null;
-            }).filter(
-                (command): command is string => command !== null
-            );
+                    const PARTS: string[] = line.split('"');
 
+                    const COMMANT = PARTS[1];
+                    const DESCRIPTION =
+                        PARTS.end()?.searchCutEnd('//') || copyDescription;
+                    copyDescription = DESCRIPTION;
+
+                    return {
+                        commant: COMMANT,
+                        description: DESCRIPTION
+                    }
+                });
 
         return COMMANTS;
     }

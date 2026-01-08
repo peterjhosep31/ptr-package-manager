@@ -1,0 +1,15 @@
+{
+  "name": "timestamp",
+  "version": "1.0.0",
+  "description": "Gestor de timestamps para ptr",
+  "main": "index.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "files": [
+    "index.ts",
+    "Timestamp.ts",
+    "Timestamp.d.ts",
+    "Types/"
+  ]
+}

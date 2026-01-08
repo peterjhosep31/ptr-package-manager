@@ -1,265 +1,181 @@
-# Libraryes - Biblioteca de Utilidades TypeScript
+# PTR - Package Manager
 
-Una biblioteca completa de utilidades TypeScript con gestión de archivos, encriptación, timestamps y manejo robusto de errores.
+Gestor de paquetes personalizado con registry propio y servidor HTTP para distribución remota.
 
-## 📦 Instalación
+## 🚀 Instalación
 
-```bash
-npm install libraryes
-```
-
-## 🚀 Características
-
-- ✅ **TypeScript 100%** - Tipado estricto y seguro
-- ✅ **Tests Completos** - 44 tests con Vitest
-- ✅ **ESLint Configurado** - Código limpio y consistente
-- ✅ **Documentación JSDoc** - Toda la API documentada
-- ✅ **Inmutable** - Tipos readonly para mayor seguridad
-
-## 📚 Módulos
-
-### 1. DirectoryFiles
-Gestión completa de archivos y directorios con validaciones robustas.
-
-```typescript
-import DirectoryFiles from 'libraryes/DirectoryFiles';
-
-const df = new DirectoryFiles();
-
-// Verificar existencia
-if (df.exists('/path/to/file.txt')) {
-    console.log('El archivo existe');
-}
-
-// Crear archivo o directorio
-df.create('/path/to/newfile.txt');
-
-// Obtener información completa de ruta
-const pathInfo = df.getPathInfo('/home/user/document.pdf');
-console.log(pathInfo);
-// {
-//   full: '/home/user/document.pdf',
-//   directory: '/home/user',
-//   filename: 'document.pdf',
-//   extension: '.pdf'
-// }
-
-// Listar contenido de directorio
-const content = df.getContentedDirectory('/home/user');
-console.log(content.files);       // Array de archivos
-console.log(content.directories); // Array de subdirectorios
-```
-
-### 2. Encripted
-Encriptación y desencriptación de texto con algoritmo personalizado.
-
-```typescript
-import Encripted from 'libraryes/Encripted';
-
-const encripted = new Encripted();
-
-// Encriptar texto
-const encrypted = encripted.encrypt('Hello World 123');
-console.log(encrypted); // Texto encriptado
-
-// Desencriptar
-const decrypted = encripted.decrypt(encrypted);
-console.log(decrypted); // 'Hello World 123'
-
-// Obtener o cambiar el salto (jump)
-const jump = encripted.getJump();
-const newJump = encripted.resetJump(); // Genera nuevo salto
-```
-
-### 3. Timestamp
-Manipulación y formato de fechas en timestamps (segundos).
-
-```typescript
-import Timestamp from 'libraryes/Timestamp';
-
-// Obtener timestamp actual
-const now = Timestamp.get();
-console.log(now); // 1733270400
-
-// Convertir a fecha formateada
-const date = Timestamp.convertToDate('Y-m-d H:i:s', now);
-console.log(date); // "2025-12-03 18:00:00"
-
-// Formatos personalizados
-Timestamp.convertToDate('d/m/Y', now);        // "03/12/2025"
-Timestamp.convertToDate('H:i:s', now);        // "18:00:00"
-Timestamp.convertToDate('Y-m-d', now);        // "2025-12-03"
-
-// Calcular diferencias
-const start = 1733270400;
-const end = 1733274000;
-const diff = Timestamp.getDiference(start, end);
-console.log(diff); // 3600 (1 hora en segundos)
-```
-
-### 4. CustomError
-Manejo avanzado de errores con información contextual.
-
-```typescript
-import CustomError from 'libraryes/CustomError';
-
-throw new CustomError('Error de validación', {
-    cause: 'El parámetro es inválido',
-    expected: 'string',
-    received: 'number',
-    status: 422
-});
-
-// Capturar y usar
-try {
-    // ... código
-} catch (error) {
-    if (error instanceof CustomError) {
-        console.log(error.message);  // 'Error de validación'
-        console.log(error.cause);    // 'El parámetro es inválido'
-        console.log(error.expected); // 'string'
-        console.log(error.received); // 'number'
-        console.log(error.status);   // 422
-    }
-}
-```
-
-### Tipos de Error Especializados
-
-```typescript
-import type { 
-    ValidationError,  // HTTP 422
-    NotFoundError,    // HTTP 404
-    ConflictError,    // HTTP 409
-    ServerError,      // HTTP 500
-    StorageError      // HTTP 507
-} from 'libraryes/Error/Types/ErrorTypes';
-```
-
-## 🛠️ Scripts de Desarrollo
+### Opción 1: Desde el servidor (Remoto)
 
 ```bash
-# Compilar TypeScript
-npm run build
+# Configurar PTR para usar el servidor remoto
+ptr config set-remote https://library.peterjhosep31.dev
 
-# Ejecutar en desarrollo
+# Instalar paquetes
+ptr install files
+```
+
+### Opción 2: Instalación Local (Desarrollo)
+
+```bash
+git clone <repository>
+cd libraryes
+npm install
+npm link  # Crea el comando global 'ptr'
+```
+
+## 📦 Comandos Disponibles
+
+### Gestión de Proyectos
+
+```bash
+# Inicializar un nuevo proyecto PTR
+ptr init [nombre-proyecto]
+
+# Instalar un paquete
+ptr install <package-name> [version]
+
+# Desinstalar un paquete
+ptr uninstall <package-name>
+
+# Listar paquetes instalados
+ptr list
+
+# Listar paquetes disponibles
+ptr list -a
+```
+
+### Configuración
+
+```bash
+# Ver configuración actual
+ptr config
+
+# Configurar registry remoto
+ptr config set-remote https://library.peterjhosep31.dev
+
+# Volver a registry local
+ptr config set-local
+```
+
+### Ayuda
+
+```bash
+# Ver todos los comandos
+ptr --help
+```
+
+## 🌐 Servidor API
+
+### Iniciar el servidor localmente
+
+```bash
 npm run dev
-
-# Ejecutar tests
-npm test              # Modo watch
-npm run test:run      # Una vez
-npm run test:ui       # Interfaz gráfica
-npm run test:coverage # Con cobertura
-
-# Linting
-npm run lint          # Verificar código
-npm run lint:fix      # Arreglar automáticamente
-
-# Type checking
-npm run type-check    # Verificar tipos sin compilar
 ```
 
-## 📋 Tipos y Enums
+El servidor se ejecuta en el puerto **3105**.
 
-### DateFormatChar
-```typescript
-import { DateFormatChar, DateSeparator } from 'libraryes/TimesTamp/Types/Format';
+### Endpoints disponibles
 
-const format = `${DateFormatChar.YEAR}${DateSeparator.DASH}${DateFormatChar.MONTH}${DateSeparator.DASH}${DateFormatChar.DAY}`;
-// "Y-m-d"
+```bash
+# Listar todos los paquetes
+GET https://library.peterjhosep31.dev/api/packages
+
+# Información de un paquete específico
+GET https://library.peterjhosep31.dev/api/packages/files
+
+# Descargar un paquete
+GET https://library.peterjhosep31.dev/api/packages/files/1.0.0/download
+
+# Descargar un archivo específico
+GET https://library.peterjhosep31.dev/api/packages/files/1.0.0/files/Files.ts
 ```
 
-### PathInfo
-```typescript
-import type { PathInfo } from 'libraryes/DirectoryFiles/Types/PathInfo';
+## 🐳 Docker
 
-const info: PathInfo = {
-    full: '/home/user/file.txt',
-    directory: '/home/user',
-    filename: 'file.txt',
-    extension: '.txt'
-};
+### Construcción
+
+```bash
+docker build -t ptr-library .
 ```
 
-## 🧪 Testing
+### Ejecución
 
-La biblioteca incluye tests completos para todos los módulos:
+```bash
+docker-compose up -d
+```
 
-- ✅ 44 tests pasando
-- ✅ Cobertura de casos edge
-- ✅ Tests de validación de tipos
-- ✅ Tests de manejo de errores
+El servidor estará disponible en `http://localhost:3105`.
 
-Ejecutar tests:
+## 📚 Paquetes Disponibles
+
+- **directory**: Gestión de directorios
+- **files**: Gestión de archivos (depende de `directory`)
+- **encripted**: Sistema de encriptación
+- **timestamp**: Gestión de timestamps
+
+## 🔧 Estructura del Proyecto
+
+```
+libraryes/
+├── CLI/              # Interfaz de línea de comandos
+├── Server/           # Servidor HTTP con API REST
+├── packages/         # Paquetes distribuibles
+│   ├── directory/
+│   ├── files/
+│   ├── encripted/
+│   └── timestamp/
+├── registry.json     # Registro de paquetes
+└── src/              # Código fuente de desarrollo
+```
+
+## 🔐 Configuración de Cloudflare Tunnel
+
+Si despliegas en tu propio servidor con Cloudflare Tunnel:
+
+```bash
+# Ya tienes el tunnel configurado en library.peterjhosep31.dev
+# Solo asegúrate de que apunte al puerto 3105
+```
+
+## 📝 Ejemplo de Uso
+
+```bash
+# 1. Crear un nuevo proyecto
+mkdir mi-proyecto
+cd mi-proyecto
+ptr init
+
+# 2. Configurar para usar el servidor remoto
+ptr config set-remote https://library.peterjhosep31.dev
+
+# 3. Instalar paquetes
+ptr install files    # Instala 'files' y su dependencia 'directory'
+ptr install timestamp
+
+# 4. Usar en tu código
+# Los paquetes se instalan en ptr_modules/
+```
+
+## 🛠️ Desarrollo
+
+### Compilar TypeScript
+
+```bash
+npm run build
+```
+
+### Ejecutar tests
+
 ```bash
 npm test
 ```
 
-## 📝 Características de TypeScript
+### Modo desarrollo con watch
 
-- **Strict Mode**: Activado para máxima seguridad
-- **No Implicit Any**: Todo debe estar tipado
-- **No Unused Variables**: Código limpio
-- **Readonly Types**: Inmutabilidad donde es apropiado
-- **Explicit Return Types**: Para métodos públicos
-
-## 🔒 Seguridad
-
-- Validación exhaustiva de parámetros
-- Manejo robusto de errores con CustomError
-- Tipos inmutables (readonly) para prevenir mutaciones
-- Sin dependencias con vulnerabilidades conocidas
-
-## 📖 Documentación
-
-Toda la API está documentada con JSDoc. Para ver la documentación:
-1. Los archivos `.d.ts` incluyen toda la documentación
-2. Tu IDE mostrará automáticamente la documentación al usar autocompletado
-3. Todos los métodos incluyen ejemplos de uso
-
-## 🤝 Contribuir
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-Asegúrate de:
-- ✅ Agregar tests para nuevas funcionalidades
-- ✅ Mantener la cobertura de tests
-- ✅ Seguir las convenciones de código (ESLint)
-- ✅ Documentar con JSDoc
+```bash
+npm run dev
+```
 
 ## 📄 Licencia
 
 ISC
-
-## 🎯 Puntuación de Calidad
-
-| Categoría | Puntuación |
-|-----------|-----------|
-| TypeScript Tipado | ⭐⭐⭐⭐⭐ 10/10 |
-| Estructura del Proyecto | ⭐⭐⭐⭐⭐ 10/10 |
-| Documentación | ⭐⭐⭐⭐⭐ 10/10 |
-| Testing | ⭐⭐⭐⭐⭐ 10/10 |
-| Manejo de Errores | ⭐⭐⭐⭐⭐ 10/10 |
-| Seguridad | ⭐⭐⭐⭐⭐ 10/10 |
-
-**PROMEDIO GENERAL: 10/10** 🎯
-
-## 🆕 Novedades v1.0.0
-
-- ✨ Nuevos tipos especializados de errores
-- ✨ Enum DateFormatChar para formatos de fecha type-safe
-- ✨ Interface PathInfo para información estructurada de rutas
-- ✨ Método resetJump() en Encripted
-- ✨ Validaciones mejoradas en todos los métodos
-- ✨ Suite completa de tests con Vitest
-- ✨ ESLint configurado con reglas estrictas
-- ✨ Tipos readonly para inmutabilidad
-- ✨ Documentación JSDoc completa
-
----
-
-Desarrollado con ❤️ y TypeScript

@@ -18,6 +18,21 @@ import ROUTER from "./Router/Router.ts";
 const APP = Express();
 
 /**
+ * Middleware para parsear JSON
+ */
+APP.use(Express.json());
+
+/**
+ * Middleware para permitir CORS (acceso desde otros dominios)
+ */
+APP.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+/**
  * Registra el router principal de la aplicación.
  * Todas las rutas definidas en ROUTER estarán disponibles en la aplicación.
  */

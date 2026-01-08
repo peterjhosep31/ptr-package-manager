@@ -1,0 +1,16 @@
+{
+  "name": "files",
+  "version": "1.0.0",
+  "description": "Gestor de archivos para ptr",
+  "main": "index.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "directory": "^1.0.0"
+  },
+  "files": [
+    "index.ts",
+    "Files.ts",
+    "Files.d.ts"
+  ]
+}

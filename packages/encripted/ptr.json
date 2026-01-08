@@ -1,0 +1,14 @@
+{
+  "name": "encripted",
+  "version": "1.0.0",
+  "description": "Sistema de encriptación para ptr",
+  "main": "index.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "files": [
+    "index.ts",
+    "Encripted.ts",
+    "Encripted.d.ts"
+  ]
+}

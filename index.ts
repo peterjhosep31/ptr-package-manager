@@ -1,3 +1,8 @@
+/// <reference path="./Prototype/Arrays/Array.d.ts" />
+/// <reference path="./Prototype/Strings/String.d.ts" />
+/// <reference path="./Prototype/Object/Object.d.ts" />
+
+
 /**
  * Punto de entrada principal de la biblioteca.
  *
@@ -10,5 +15,7 @@
  */
 import './Server/server.ts';
 
-
-// d03f2532-43fb-4b71-a57d-6ee32b2e5b39
+// Exportar para que los usuarios puedan importar y cargar automáticamente
+import "./Prototype/Arrays/Array.ts";
+import "./Prototype/Object/Object.ts";
+import "./Prototype/Strings/String.ts";
