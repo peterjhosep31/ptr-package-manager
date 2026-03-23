@@ -1,19 +1,20 @@
-import fs from "fs";
 import os from "os";
 import path from "path";
-
-interface PtrConfig {
-    registry: "local" | "remote";
-    remoteUrl?: string;
-}
+import Directory from "../../packages/directory/Directory.ts";
+import Files from "../../packages/files/Files.ts";
+import type { PtrConfig } from "./interface/PtrConfig.ts";
 
 class Config {
     private configPath: string;
     private defaultConfig: PtrConfig = {
         registry: "local"
     };
+    private FILES: Files;
+    private DIRECTORY: Directory;
 
     constructor() {
+        this.FILES = new Files();
+        this.DIRECTORY = new Directory();
         // Archivo de configuración en el home del usuario
         this.configPath = path.join(os.homedir(), ".ptrrc.json");
     }
@@ -23,11 +24,11 @@ class Config {
      */
     public read(): PtrConfig {
         try {
-            if (!fs.existsSync(this.configPath)) {
+            if (!this.DIRECTORY.exists(this.configPath)) {
                 return this.defaultConfig;
             }
 
-            const content = fs.readFileSync(this.configPath, "utf-8");
+            const content = this.FILES.read(this.configPath);
             return { ...this.defaultConfig, ...JSON.parse(content) };
         } catch (error) {
             return this.defaultConfig;
@@ -41,7 +42,7 @@ class Config {
         try {
             const current = this.read();
             const updated = { ...current, ...config };
-            fs.writeFileSync(this.configPath, JSON.stringify(updated, null, 2), "utf-8");
+            this.FILES.write(this.configPath, JSON.stringify(updated, null, 2));
         } catch (error) {
             throw new Error(`Error al guardar configuración: ${(error as Error).message}`);
         }
@@ -62,8 +63,7 @@ class Config {
      */
     public setLocalRegistry(): void {
         this.write({
-            registry: "local",
-            remoteUrl: undefined
+            registry: "local"
         });
     }
 

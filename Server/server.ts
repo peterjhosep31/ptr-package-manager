@@ -9,13 +9,67 @@
  */
 
 import Express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import ROUTER from "./Router/Router.ts";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Instancia de la aplicación Express.
  * Configura middleware y rutas para el servidor HTTP.
  */
 const APP = Express();
+
+// Seguridad de cabeceras HTTP
+APP.use(helmet({
+    contentSecurityPolicy: false, // Opcional, dependiendo de si el renderizado EJS tiene scripts en línea
+}));
+
+// Límite de peticiones por IP
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    limit: 150, // Límite por IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "Demasiadas peticiones desde esta IP, por favor intente más tarde."
+});
+APP.use(limiter);
+
+/**
+ * Configuración del motor de plantillas EJS
+ */
+APP.set('view engine', 'ejs');
+APP.set('views', path.join(__dirname, 'views'));
+
+/**
+ * Middleware para servir archivos estáticos CSS
+ */
+APP.use('/styles', Express.static(path.join(__dirname, 'views/styles')));
+
+/**
+ * Middleware para servir archivos estáticos JavaScript
+ */
+APP.use('/scripts', Express.static(path.join(__dirname, 'views/scripts')));
+
+/**
+ * Middleware para servir archivos estáticos (assets: imágenes, iconos, etc.)
+ */
+APP.use('/assets', Express.static(path.join(__dirname, 'views/assets')));
+
+/**
+ * Rutas para SEO
+ */
+APP.get('/robots.txt', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views/robots.txt'));
+});
+
+APP.get('/sitemap.xml', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'views/sitemap.xml'));
+});
 
 /**
  * Middleware para parsear JSON
@@ -26,9 +80,9 @@ APP.use(Express.json());
  * Middleware para permitir CORS (acceso desde otros dominios)
  */
 APP.use((_req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Origin', process.env['CORS_ORIGIN'] || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
 
@@ -39,9 +93,11 @@ APP.use((_req, res, next) => {
 APP.use(ROUTER);
 
 /**
- * Inicia el servidor en el puerto 3000.
- * Muestra un mensaje en consola cuando el servidor está listo.
+ * Inicia el servidor en el puerto configurado.
+ * Puerto 3106 para desarrollo, 3105 para producción.
  */
-APP.listen(3105, () => {
-    console.log("Server is running on port 3105");
+const PORT = process.env['NODE_ENV'] === 'development' ? 3106 : 3105;
+
+APP.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT} (${process.env['NODE_ENV'] || 'production'} mode)`);
 });

@@ -1,7 +1,9 @@
-import CustomError from "../../src/Error/Error.ts";
-import Files from "../../src/Files/Files.ts";
 import path from "path";
 import { fileURLToPath } from "url";
+import CustomError from "../../packages/error/Error.ts";
+import Files from "../../packages/files/Files.ts";
+import { arrayEnd } from "../../packages/utils/ArrayUtils.ts";
+import { searchCutEnd } from "../../packages/utils/StringUtils.ts";
 
 // Obtener __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -15,7 +17,7 @@ class RequestNotProcessed {
 
     getCommands() {
 
-        const COMMANTS = this.readFileRouter();
+        const COMMANDS = this.readFileRouter();
 
         // Mostrar título
         console.log('\n\x1b[1m\x1b[36m📋 Comandos Disponibles\x1b[0m\n');
@@ -26,8 +28,8 @@ class RequestNotProcessed {
         console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m');
 
         // Mostrar cada comando
-        COMMANTS.forEach((cmd: any) => {
-            console.log(`  \x1b[1m\x1b[32m${cmd.commant.padEnd(15)}\x1b[0m \x1b[90m│\x1b[0m \x1b[37m${cmd.description}\x1b[0m`);
+        COMMANDS.forEach((cmd: any) => {
+            console.log(`  \x1b[1m\x1b[32m${cmd.command.padEnd(15)}\x1b[0m \x1b[90m│\x1b[0m \x1b[37m${cmd.description}\x1b[0m`);
         });
 
         console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m\n');
@@ -39,14 +41,14 @@ class RequestNotProcessed {
 
         // Leemos el archivo de entrada usando ruta absoluta desde la ubicación del script
         const CLI_PATH = path.join(__dirname, '../index.ts');
-        const CONTENTED: string = FILES.readFile(CLI_PATH);
+        const CONTENT: string = FILES.read(CLI_PATH);
 
-        if (CONTENTED.length === 0)
+        if (CONTENT.length === 0)
             throw new CustomError('Archivo vacío');
 
         let copyDescription: string;
 
-        const COMMANTS: Object[] = CONTENTED?.split('\n')
+        const COMMANDS: Object[] = CONTENT?.split('\n')
             .filter(
                 line => line.trim() && line.includes('case')
             ).map(
@@ -55,17 +57,18 @@ class RequestNotProcessed {
                     const PARTS: string[] = line.split('"');
 
                     const COMMANT = PARTS[1];
+                    const endPart = arrayEnd(PARTS);
                     const DESCRIPTION =
-                        PARTS.end()?.searchCutEnd('//') || copyDescription;
+                        (endPart ? searchCutEnd(endPart, '//') : null) || copyDescription;
                     copyDescription = DESCRIPTION;
 
                     return {
-                        commant: COMMANT,
+                        command: COMMANT,
                         description: DESCRIPTION
                     }
                 });
 
-        return COMMANTS;
+        return COMMANDS;
     }
 
 }

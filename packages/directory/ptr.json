@@ -1,15 +1,17 @@
 {
-  "name": "directory",
-  "version": "1.0.0",
-  "description": "Gestor de directorios para ptr",
-  "main": "index.ts",
-  "author": "",
-  "license": "ISC",
-  "dependencies": {},
-  "files": [
-    "index.ts",
-    "Directory.ts",
-    "Directory.d.ts",
-    "Types/"
-  ]
+    "name": "directory",
+    "version": "1.0.0",
+    "description": "Gestor de directorios para ptr",
+    "main": "index.ts",
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "error": "1.0.0"
+    },
+    "files": [
+        "index.ts",
+        "Directory.ts",
+        "Directory.d.ts",
+        "Types/"
+    ]
 }

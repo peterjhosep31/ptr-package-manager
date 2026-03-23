@@ -1,3 +1,6 @@
+import type { PathInfo } from "./Types/PathInfo";
+import type { DirectoryFilesReturn } from "./Types/Return";
+
 /**
  * Clase para gestionar operaciones sobre archivos y directorios del sistema de archivos.
  *
@@ -68,6 +71,30 @@ declare class DirectoryFiles {
      * @returns {boolean} true si el archivo fue creado exitosamente.
      */
     createFile(pathDirectory: string): boolean;
+
+    /**
+     * Obtiene y clasifica el contenido de un directorio.
+     *
+     * @param {string} directory - La ruta absoluta o relativa del directorio a leer.
+     * @returns {DirectoryFilesReturn} Objeto con arrays de directories y files.
+     */
+    getDirectoryContents(directory: string): DirectoryFilesReturn;
+
+    /**
+     * Obtiene información completa de una ruta de archivo o directorio.
+     *
+     * @param {string} pathDirectory - La ruta completa del archivo o directorio.
+     * @returns {PathInfo} Objeto con información completa de la ruta.
+     */
+    getPathInfo(pathDirectory: string): PathInfo;
+
+    /**
+     * Elimina un directorio recursivamente junto con todo su contenido.
+     *
+     * @param {string} dirPath - La ruta absoluta o relativa del directorio a eliminar.
+     * @returns {boolean} true si el directorio fue eliminado exitosamente.
+     */
+    deleteDirectory(dirPath: string): boolean;
 }
 
 export default DirectoryFiles;

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import CustomError from "../Error/Error.ts";
+import CustomError from "../error/Error.ts";
 import type { PathInfo } from "./Types/PathInfo.ts";
 import type { DirectoryFilesReturn } from "./Types/Return.ts";
 
@@ -21,6 +21,12 @@ import type { DirectoryFilesReturn } from "./Types/Return.ts";
  */
 class Directory {
 
+    public separator: string;
+
+    public constructor() {
+        this.separator = path.sep;
+    }
+
     /**
      * Verifica si un directorio o archivo existe en el sistema de archivos.
      *
@@ -30,7 +36,7 @@ class Directory {
      * @throws {CustomError} Si el parámetro pathDirectory no es de tipo string (status 422).
      * @throws {CustomError} Si el parámetro createIfDoesnotExist no es de tipo boolean (status 422).
      */
-    exists(
+    public exists(
         pathDirectory: string,
         createIfDoesnotExist: boolean = false
     ): boolean {
@@ -60,7 +66,28 @@ class Directory {
 
         // Creamos la ruta si no existe
         if (!exist && createIfDoesnotExist) {
-            this.create(pathDirectory);
+            // Si la ruta no tiene extensión, es un directorio
+            const ext = this.extension(pathDirectory);
+            if (!ext || ext === "") {
+                // Es un directorio, crear con mkdirSync
+                try {
+                    fs.mkdirSync(pathDirectory, { recursive: true });
+                } catch (error: unknown) {
+                    // Ignorar error si el directorio ya existe
+                    if (error instanceof Error && !error.message.includes('EEXIST')) {
+                        throw new CustomError(
+                            `Error al crear directorio en DirectoryFiles.exists()`,
+                            {
+                                cause: error.message,
+                                status: 507
+                            }
+                        );
+                    }
+                }
+            } else {
+                // Es un archivo, usar create
+                this.create(pathDirectory);
+            }
             exist = true;
         }
 
@@ -107,9 +134,8 @@ class Directory {
         try {
             this.createDirectory(DIRECTORY);
         } catch (error: unknown) {
-
-            if (error instanceof CustomError)
-                if (error.status !== 409)
+            if (error instanceof CustomError) {
+                if (error.status !== 409) {
                     throw new CustomError(
                         `Error interno en DirectoryFiles.create(): Falló la creación del directorio`,
                         {
@@ -117,6 +143,16 @@ class Directory {
                             status: 507 // Insufficient Storage - Problemas del sistema de archivos
                         }
                     );
+                }
+            } else if (error instanceof Error) {
+                throw new CustomError(
+                    `Error interno en DirectoryFiles.create(): Falló la creación del directorio`,
+                    {
+                        cause: `Error del sistema de archivos: ${error.message}`,
+                        status: 507
+                    }
+                );
+            }
         }
 
         return this.createFile(pathDirectory);
@@ -186,7 +222,7 @@ class Directory {
      * @example
      * extension("/home/user/archivo.txt") // Retorna: ".txt"
      */
-    extension(
+    public extension(
         pathDirectory: string
     ): string {
         if (typeof pathDirectory !== "string")
@@ -214,7 +250,7 @@ class Directory {
      * @throws {CustomError} Si el directorio ya existe (status 409).
      * @throws {CustomError} Si falla la creación por problemas del sistema de archivos (status 507).
      */
-    createDirectory(
+    public createDirectory(
         pathDirectory: string
     ): void {
         if (typeof pathDirectory !== "string")
@@ -242,6 +278,9 @@ class Directory {
         try {
             fs.mkdirSync(pathDirectory, { recursive: true });
         } catch (error: unknown) {
+            if (error instanceof CustomError)
+                throw error;
+
             if (error instanceof Error)
                 throw new CustomError(
                     `Error interno en DirectoryFiles.createDirectory(): No se pudo crear el directorio`,
@@ -263,7 +302,7 @@ class Directory {
      * @throws {CustomError} Si el archivo ya existe (status 409).
      * @throws {CustomError} Si falla la creación por problemas del sistema de archivos (status 507).
      */
-    createFile(
+    public createFile(
         pathDirectory: string
     ): boolean {
         if (typeof pathDirectory !== "string")
@@ -292,6 +331,9 @@ class Directory {
             return true;
         } catch (error: unknown) {
 
+            if (error instanceof CustomError)
+                throw error;
+
             if (error instanceof Error)
                 throw new CustomError(
                     `Error interno en DirectoryFiles.createFile(): No se pudo crear el archivo`,
@@ -315,16 +357,16 @@ class Directory {
      *   - files: Array con las rutas completas de los archivos.
      * @throws {Error} Si el directorio no existe o no se puede leer.
      * @example
-     * getContentedDirectory("/home/user")
+     * getDirectoryContents("/home/user")
      * // Retorna: { directories: ["/home/user/docs"], files: ["/home/user/file.txt"] }
      */
-    getContentedDirectory(
+    public getDirectoryContents(
         directory: string
     ): DirectoryFilesReturn {
 
         if (typeof directory !== "string")
             throw new CustomError(
-                `Error de validación en DirectoryFiles.getContentedDirectory(): El parámetro 'directory' debe ser de tipo string`,
+                `Error de validación en DirectoryFiles.getDirectoryContents(): El parámetro 'directory' debe ser de tipo string`,
                 {
                     cause: "Tipo de dato inválido para el parámetro directory",
                     expected: "string",
@@ -371,7 +413,9 @@ class Directory {
      * //   extension: ".txt"
      * // }
      */
-    public getPathInfo(pathDirectory: string): PathInfo {
+    public getPathInfo(
+        pathDirectory: string
+    ): PathInfo {
         if (typeof pathDirectory !== "string")
             throw new CustomError(
                 `Error de validación en DirectoryFiles.getPathInfo(): El parámetro 'pathDirectory' debe ser de tipo string`,
@@ -389,6 +433,63 @@ class Directory {
             filename: this.baseName(pathDirectory),
             extension: this.extension(pathDirectory)
         };
+    }
+
+    /**
+     * Elimina un directorio recursivamente junto con todo su contenido.
+     * Elimina primero todos los archivos y subdirectorios antes de eliminar el directorio principal.
+     *
+     * @param {string} dirPath - La ruta absoluta o relativa del directorio a eliminar.
+     * @returns {boolean} true si el directorio fue eliminado exitosamente.
+     * @throws {CustomError} Si el parámetro dirPath no es de tipo string (status 422).
+     * @throws {CustomError} Si el directorio no existe (status 404).
+     * @throws {CustomError} Si falla la eliminación por problemas del sistema de archivos (status 500).
+     */
+    public deleteDirectory(
+        dirPath: string
+    ): boolean {
+        if (typeof dirPath !== "string")
+            throw new CustomError(
+                `Error de validación en DirectoryFiles.deleteDirectory(): El parámetro 'dirPath' debe ser de tipo string`,
+                {
+                    cause: "Tipo de dato inválido para el parámetro dirPath",
+                    expected: "string",
+                    received: typeof dirPath,
+                    status: 422
+                }
+            );
+
+        if (!this.exists(dirPath))
+            throw new CustomError(
+                `Error en DirectoryFiles.deleteDirectory(): El directorio no existe`,
+                {
+                    cause: `No se encontró el directorio '${dirPath}'`,
+                    status: 404
+                }
+            );
+
+        try {
+            fs.rmSync(dirPath, { recursive: true, force: true });
+            return true;
+        } catch (error: unknown) {
+            if (error instanceof Error)
+                throw new CustomError(
+                    `Error interno en DirectoryFiles.deleteDirectory(): No se pudo eliminar el directorio`,
+                    {
+                        cause: `Error del sistema de archivos al eliminar '${dirPath}': ${error.message}`,
+                        status: 500
+                    }
+                );
+            return false;
+        }
+    }
+
+    public joinPath(...paths: string[]): string {
+        return path.join(...paths);
+    }
+
+    public baseNameProject(): string {
+        return this.baseName(process.cwd());
     }
 }
 

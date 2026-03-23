@@ -1,0 +1,187 @@
+/* ==========================================
+   ESTILOS ESPECÍFICOS - PÁGINA INSTALACIÓN
+   ========================================== */
+
+/* =================== LAYOUT =================== */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #1e293b;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid #334155;
+    overflow: hidden;
+}
+
+.page-title {
+    background: #0f172a;
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid #334155;
+}
+
+.page-title h2 {
+    font-size: 2.5rem;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(147, 197, 253, 0.3);
+}
+
+.page-title p {
+    color: #e2e8f0;
+    font-size: 1.1rem;
+}
+
+.content {
+    padding: 40px 30px;
+}
+
+/* =================== INSTALL BOXES =================== */
+.install-box {
+    background: #0f172a;
+    border-left: 4px solid #3b82f6;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 6px;
+    border: 1px solid #334155;
+}
+
+.install-box.primary {
+    background: #1e3a8a;
+    border-left-color: #60a5fa;
+    border-color: #1e40af;
+}
+
+.install-box p {
+    color: #e2e8f0;
+    margin-bottom: 10px;
+}
+
+.install-box.primary p {
+    color: #e0f2fe;
+}
+
+/* =================== CODE ELEMENTS =================== */
+code {
+    background: #334155;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #93c5fd;
+}
+
+pre code {
+    background: transparent;
+    padding: 0;
+    color: #e2e8f0;
+}
+
+/* =================== BADGES =================== */
+.badge {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.badge.recommended {
+    background: #10b981;
+}
+
+/* =================== COMMANDS LIST =================== */
+.commands-list {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 6px;
+    margin: 15px 0;
+    border: 1px solid #334155;
+}
+
+.commands-list li {
+    font-family: 'Courier New', monospace;
+    color: #94a3b8;
+}
+
+/* =================== ENDPOINTS =================== */
+.endpoint-list {
+    list-style: none;
+    margin-left: 0;
+}
+
+.endpoint-list li {
+    background: #0f172a;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border-radius: 4px;
+    border-left: 3px solid #3b82f6;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+}
+
+.method {
+    display: inline-block;
+    background: #10b981;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+    }
+
+    .page-title h2 {
+        font-size: 2rem;
+    }
+
+    .content {
+        padding: 30px 20px;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .container {
+        margin: 10px;
+        border-radius: 8px;
+    }
+
+    .page-title {
+        padding: 20px;
+    }
+
+    .page-title h2 {
+        font-size: 1.6rem;
+    }
+
+    .page-title p {
+        font-size: 1rem;
+    }
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .install-box {
+        padding: 15px;
+    }
+
+    code {
+        font-size: 0.85em;
+        word-break: break-all;
+    }
+}

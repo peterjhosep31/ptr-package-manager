@@ -1,0 +1,225 @@
+<%- include('components/head') %>
+
+    <link rel="stylesheet" href="/styles/packages.css">
+
+
+    <body>
+
+        <%- include('components/header') %>
+
+            <div class="container">
+                <div class="page-header fade-in-down">
+                    <h2>📦 Catálogo de Paquetes</h2>
+                    <p>Paquetes utilitarios especializados para Node.js con TypeScript</p>
+                </div>
+
+                <h3 class="fade-in-down">Paquetes Disponibles</h3>
+
+                <div class="packages-grid">
+                    <!-- Files Package -->
+                    <div class="package-card scale-in delay-1">
+                        <div class="package-header">
+                            <h3 class="package-name">files</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Paquete completo para operaciones de I/O (Input/Output) de archivos en Node.js. Permite
+                            leer, escribir,
+                            copiar, mover y eliminar archivos con una API simple y tipada.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">📁</span> Archivos
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">🔧</span> Utilidades
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <ul class="dep-list">
+                                <li>→ directory ^1.0.0</li>
+                                <li>→ error ^1.0.0</li>
+                            </ul>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install files</code>
+                        </div>
+                    </div>
+
+                    <!-- Directory Package -->
+                    <div class="package-card scale-in delay-2">
+                        <div class="package-header">
+                            <h3 class="package-name">directory</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Paquete para gestión de directorios y estructura de carpetas. Crea, elimina, lista y
+                            manipula
+                            directorios con soporte completo para rutas absolutas y relativas.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">📂</span> Directorios
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">🔧</span> Utilidades
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <ul class="dep-list">
+                                <li>→ error ^1.0.0</li>
+                            </ul>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install directory</code>
+                        </div>
+                    </div>
+
+                    <!-- Error Package -->
+                    <div class="package-card scale-in delay-3">
+                        <div class="package-header">
+                            <h3 class="package-name">error</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Sistema robusto de manejo de excepciones personalizadas. Permite crear, capturar y gestionar
+                            errores tipados con mensajes descriptivos y códigos de error específicos.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">⚠️</span> Errores
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">🛡️</span> Core
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <p class="no-deps">Sin dependencias</p>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install error</code>
+                        </div>
+                    </div>
+
+                    <!-- Encripted Package -->
+                    <div class="package-card scale-in delay-4">
+                        <div class="package-header">
+                            <h3 class="package-name">encrypted</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Paquete especializado en encriptación de credenciales y datos sensibles. Utiliza algoritmos
+                            seguros
+                            para proteger contraseñas, tokens y otra información confidencial.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">🔐</span> Seguridad
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">🔑</span> Encriptación
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <ul class="dep-list">
+                                <li>→ error ^1.0.0</li>
+                            </ul>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install encrypted</code>
+                        </div>
+                    </div>
+
+                    <!-- Timestamp Package -->
+                    <div class="package-card scale-in delay-5">
+                        <div class="package-header">
+                            <h3 class="package-name">timestamp</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Utilidades completas para trabajar con tiempo Unix y timestamps. Ofrece conversiones,
+                            formateo,
+                            cálculos de diferencias y manipulación de fechas de manera sencilla.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">⏰</span> Tiempo
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">📅</span> Fechas
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <p class="no-deps">Sin dependencias</p>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install timestamp</code>
+                        </div>
+                    </div>
+
+                    <!-- Prototype Package -->
+                    <div class="package-card scale-in delay-6">
+                        <div class="package-header">
+                            <h3 class="package-name">prototype</h3>
+                            <span class="package-version">v1.0.0</span>
+                        </div>
+                        <p class="package-description">
+                            Extensiones útiles para prototipos nativos de JavaScript (Array, Object, String), agregando
+                            métodos convenientes y funcionalidades adicionales.
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">🧬</span> Prototipos
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">✨</span> Extensiones
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <p class="no-deps">Sin dependencias</p>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install prototype</code>
+                        </div>
+                    </div>
+
+                    <!-- Database Package -->
+                    <div class="package-card scale-in delay-7">
+                        <div class="package-header">
+                            <h3 class="package-name">database</h3>
+                            <span class="package-version">v0.1.0-beta</span>
+                        </div>
+                        <p class="package-description">
+                            ORM (Object-Relational Mapping) para bases de datos SQL. Facilita la interacción con bases
+                            de datos
+                            relacionales mediante objetos TypeScript con tipado completo. <strong>En desarrollo
+                                activo.</strong>
+                        </p>
+                        <div class="package-meta">
+                            <span class="meta-badge">
+                                <span class="meta-icon">🗄️</span> ORM
+                            </span>
+                            <span class="meta-badge">
+                                <span class="meta-icon">🚧</span> Beta
+                            </span>
+                        </div>
+                        <div class="dependencies">
+                            <h4>📌 Dependencias:</h4>
+                            <ul class="dep-list">
+                                <li>→ error ^1.0.0</li>
+                            </ul>
+                        </div>
+                        <div class="install-command">
+                            <code>ptr install database</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('components/footer') %>

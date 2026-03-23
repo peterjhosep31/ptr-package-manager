@@ -1,7 +1,8 @@
 import { Router } from "express";
-import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import Directory from "../../../packages/directory/Directory.ts";
+import Files from "../../../packages/files/Files.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,22 +13,25 @@ const router = Router();
 const PACKAGES_DIR = path.join(__dirname, "../../../packages");
 const REGISTRY_PATH = path.join(__dirname, "../../../registry.json");
 
+const FILES: Files = new Files();
+const DIRECTORY: Directory = new Directory();
+
 /**
  * GET /api/packages
  * Lista todos los paquetes disponibles en el registry
  */
 router.get("/", (_req, res) => {
     try {
-        if (!fs.existsSync(REGISTRY_PATH)) {
+        if (!DIRECTORY.exists(REGISTRY_PATH)) {
             return res.status(404).json({ error: "Registry no encontrado" });
         }
 
-        const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf-8"));
+        const registry = JSON.parse(FILES.read(REGISTRY_PATH));
 
         return res.json({
             success: true,
             packages: registry.packages,
-            total: Object.keys(registry.packages).length
+            total: registry.packages.length
         });
     } catch (error) {
         return res.status(500).json({
@@ -44,7 +48,7 @@ router.get("/", (_req, res) => {
 router.get("/:name", (req, res) => {
     try {
         const { name } = req.params;
-        const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf-8"));
+        const registry = JSON.parse(FILES.read(REGISTRY_PATH));
 
         if (!registry.packages[name]) {
             return res.status(404).json({
@@ -71,7 +75,7 @@ router.get("/:name", (req, res) => {
 router.get("/:name/:version/download", (req, res) => {
     try {
         const { name, version } = req.params;
-        const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf-8"));
+        const registry = JSON.parse(FILES.read(REGISTRY_PATH));
 
         if (!registry.packages[name]) {
             return res.status(404).json({
@@ -88,7 +92,7 @@ router.get("/:name/:version/download", (req, res) => {
 
         const packagePath = path.join(PACKAGES_DIR, packageInfo.path);
 
-        if (!fs.existsSync(packagePath)) {
+        if (!DIRECTORY.exists(packagePath)) {
             return res.status(404).json({
                 error: `Directorio del paquete no encontrado: ${packagePath}`
             });
@@ -96,13 +100,13 @@ router.get("/:name/:version/download", (req, res) => {
 
         // Leer ptr.json del paquete
         const ptrJsonPath = path.join(packagePath, "ptr.json");
-        if (!fs.existsSync(ptrJsonPath)) {
+        if (!DIRECTORY.exists(ptrJsonPath)) {
             return res.status(404).json({
                 error: "ptr.json no encontrado en el paquete"
             });
         }
 
-        const ptrJson = JSON.parse(fs.readFileSync(ptrJsonPath, "utf-8"));
+        const ptrJson = JSON.parse(FILES.read(ptrJsonPath));
 
         // Leer todos los archivos especificados en ptr.json
         const files: Record<string, string> = {};
@@ -110,8 +114,16 @@ router.get("/:name/:version/download", (req, res) => {
         if (ptrJson.files && Array.isArray(ptrJson.files)) {
             for (const file of ptrJson.files) {
                 const filePath = path.join(packagePath, file);
-                if (fs.existsSync(filePath)) {
-                    files[file] = fs.readFileSync(filePath, "utf-8");
+                
+                // Prevenir Path Traversal security validation
+                const normalizedPath = path.normalize(filePath);
+                const normalizedBase = path.normalize(packagePath);
+                if (!normalizedPath.startsWith(normalizedBase)) {
+                    continue; // Saltar archivo (intento de path traversal)
+                }
+
+                if (DIRECTORY.exists(normalizedPath)) {
+                    files[file] = FILES.read(normalizedPath);
                 }
             }
         }

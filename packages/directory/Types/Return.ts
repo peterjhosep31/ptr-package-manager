@@ -1,5 +1,5 @@
 /**
- * Tipo de retorno para el método getContentedDirectory de la clase DirectoryFiles.
+ * Tipo de retorno para el método getDirectoryContents de la clase DirectoryFiles.
  * Representa el contenido de un directorio clasificado en subdirectorios y archivos.
  * 
  * @typedef {Object} DirectoryFilesReturn

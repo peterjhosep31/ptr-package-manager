@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="64" height="64" rx="12" fill="url(#bg)"/>
+
+  <!-- Hexágono central -->
+  <g transform="translate(32, 32)">
+    <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11"
+             fill="#0f172a"
+             stroke="#60a5fa"
+             stroke-width="2.5"/>
+  </g>
+
+  <!-- Texto PTR grande -->
+  <text x="32" y="37"
+        font-family="Arial, sans-serif"
+        font-size="14"
+        font-weight="bold"
+        fill="#60a5fa"
+        text-anchor="middle">
+    PTR
+  </text>
+
+  <!-- Cohete pequeño decorativo -->
+  <g transform="translate(50, 14)">
+    <path d="M 0,-4 L -2,0 L 0,4 L 2,0 Z" fill="#60a5fa"/>
+    <circle cx="0" cy="0" r="1" fill="#93c5fd"/>
+  </g>
+</svg>

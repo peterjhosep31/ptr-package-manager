@@ -1,0 +1,83 @@
+<%- include('components/head') %>
+    <link rel="stylesheet" href="/styles/notFound.css">
+
+    <body>
+
+        <%- include('components/header') %>
+
+            <div class="not-found-container">
+                <!-- Partículas animadas de fondo -->
+                <div class="particle particle-1"></div>
+                <div class="particle particle-2"></div>
+                <div class="particle particle-3"></div>
+                <div class="particle particle-4"></div>
+                <div class="particle particle-5"></div>
+                <div class="particle particle-6"></div>
+
+                <!-- Logo grande de fondo -->
+                <div class="background-logo"></div>
+
+                <!-- Contenido principal -->
+                <div class="not-found-content">
+                    <div class="error-code">
+                        <span class="number-4 bounce-in delay-1">4</span>
+                        <span class="number-0 rotate-in delay-2">
+                            <svg viewBox="0 0 100 100" class="rotating-icon">
+                                <circle cx="50" cy="50" r="40" stroke="#3b82f6" stroke-width="4" fill="none" />
+                                <circle cx="50" cy="50" r="30" stroke="#60a5fa" stroke-width="2" fill="none"
+                                    opacity="0.5" />
+                                <path d="M 50 20 L 50 80 M 20 50 L 80 50" stroke="#3b82f6" stroke-width="3" />
+                            </svg>
+                        </span>
+                        <span class="number-4 bounce-in delay-3">4</span>
+                    </div>
+
+                    <h1 class="fade-in-up delay-4">Página No Encontrada</h1>
+                    <p class="fade-in-up delay-5">
+                        Lo sentimos, la página que estás buscando no existe o ha sido movida.
+                    </p>
+
+                    <div class="error-details fade-in-up delay-6">
+                        <div class="detail-item">
+                            <span class="detail-icon">🔍</span>
+                            <span>La ruta solicitada no fue encontrada</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-icon">📍</span>
+                            <span>Error 404 - Not Found</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons fade-in-up delay-7">
+                        <a href="/" class="btn btn-primary">
+                            <span class="btn-icon">🏠</span>
+                            Volver al Inicio
+                        </a>
+                        <a href="/packages" class="btn btn-secondary">
+                            <span class="btn-icon">📦</span>
+                            Ver Paquetes
+                        </a>
+                        <a href="/docs" class="btn btn-secondary">
+                            <span class="btn-icon">📚</span>
+                            Documentación
+                        </a>
+                    </div>
+
+                    <!-- Sugerencias útiles -->
+                    <div class="suggestions fade-in-up delay-8">
+                        <h3>¿Qué puedes hacer?</h3>
+                        <ul>
+                            <li><a href="/">Ir a la página principal</a></li>
+                            <li><a href="/install">Ver guía de instalación</a></li>
+                            <li><a href="/packages">Explorar paquetes disponibles</a></li>
+                            <li><a href="/docs">Leer la documentación</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('components/footer') %>
+
+    </body>
+
+    </html>

@@ -1,0 +1,150 @@
+<%- include('components/head') %>
+    <link rel="stylesheet" href="/styles/home.css">
+
+    <body>
+
+        <%- include('components/header') %>
+
+            <div class="hero">
+                <!-- Partículas animadas -->
+                <div class="particle particle-1"></div>
+                <div class="particle particle-2"></div>
+                <div class="particle particle-3"></div>
+                <div class="particle particle-4"></div>
+                <div class="particle particle-5"></div>
+                <div class="particle particle-6"></div>
+                <div class="particle particle-7"></div>
+                <div class="particle particle-8"></div>
+
+                <h2>Gestor de Paquetes Node.js</h2>
+                <p>PTR es un gestor de paquetes especializados para Node.js, con módulos utilitarios para
+                    manejo de archivos, tiempo Unix, encriptación de credenciales y base de datos.</p>
+                <div class="cta-buttons">
+                    <a href="/install" class="btn btn-primary">Comenzar Ahora</a>
+                    <a href="/packages" class="btn btn-secondary">Ver Paquetes</a>
+                </div>
+
+                <!-- Stats dinámicas -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">📦</span>
+                        <div class="stat-content">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Paquetes</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">⚡</span>
+                        <div class="stat-content">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">TypeScript</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🚀</span>
+                        <div class="stat-content">
+                            <div class="stat-value">v1.0</div>
+                            <div class="stat-label">Estable</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🔒</span>
+                        <div class="stat-content">
+                            <div class="stat-value">256-bit</div>
+                            <div class="stat-label">Encriptado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="features">
+                <h3 class="fade-in-down">¿Por qué usar PTR?</h3>
+                <div class="features-grid">
+                    <div class="feature-card fade-in-up delay-1">
+                        <div class="feature-icon">�</div>
+                        <h4>Manejo de Archivos</h4>
+                        <p>Paquetes especializados para lectura, escritura y manipulación de archivos y directorios en
+                            Node.js.</p>
+                    </div>
+
+                    <div class="feature-card fade-in-up delay-2">
+                        <div class="feature-icon">⏱️</div>
+                        <h4>Timestamps Unix</h4>
+                        <p>Utilidades completas para trabajar con fechas y timestamps en formato Unix de manera
+                            sencilla.</p>
+                    </div>
+
+                    <div class="feature-card fade-in-up delay-3">
+                        <div class="feature-icon">🔐</div>
+                        <h4>Encriptación</h4>
+                        <p>Sistema robusto para encriptar y proteger credenciales y datos sensibles en tus aplicaciones.
+                        </p>
+                    </div>
+
+                    <div class="feature-card fade-in-up delay-4">
+                        <div class="feature-icon">🗄️</div>
+                        <h4>ORM SQL (En Desarrollo)</h4>
+                        <p>Object-Relational Mapping para trabajar con bases de datos SQL de forma intuitiva y
+                            eficiente.</p>
+                    </div>
+
+                    <div class="feature-card fade-in-up delay-5">
+                        <div class="feature-icon">⚡</div>
+                        <h4>TypeScript Nativo</h4>
+                        <p>Todos los paquetes desarrollados 100% en TypeScript con tipado completo y seguridad de tipos.
+                        </p>
+                    </div>
+
+                    <div class="feature-card fade-in-up delay-6">
+                        <div class="feature-icon">📦</div>
+                        <h4>Gestión Centralizada</h4>
+                        <p>Registry propio con CLI para instalar, actualizar y gestionar todos los paquetes desde un
+                            solo lugar.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about fade-in-up delay-7">
+                <div class="about-content">
+                    <h3>Sobre el Proyecto</h3>
+
+                    <div class="about-text">
+                        <p>
+                            PTR (Package Transfer Registry) es un gestor de paquetes para Node.js con un registry
+                            propio,
+                            facilitando la instalación y gestión de módulos utilitarios especializados.
+                        </p>
+
+                        <p><strong>Paquetes disponibles:</strong></p>
+                        <ul>
+                            <li><strong>Files:</strong> Módulo completo de I/O para lectura y escritura de archivos</li>
+                            <li><strong>Directory:</strong> Gestión avanzada de directorios y estructura de carpetas
+                            </li>
+                            <li><strong>Timestamp:</strong> Utilidades para manejo de fechas y tiempo Unix</li>
+                            <li><strong>Encripted:</strong> Encriptación segura de credenciales y datos sensibles</li>
+                            <li><strong>Error:</strong> Sistema robusto de manejo y gestión de errores</li>
+                            <li><strong>Prototype:</strong> Extensiones para prototipos nativos de JavaScript</li>
+                            <li><strong>Database:</strong> ORM SQL en desarrollo para bases de datos relacionales</li>
+                        </ul>
+                    </div>
+
+                    <div class="quick-start">
+                        <h4>🚀 Inicio Rápido</h4>
+                        <pre><code>
+# Instalar PTR
+curl -fsSL <%= serverUrl %>/install.sh | bash
+
+# Inicializar un proyecto
+ptr init mi-proyecto
+
+# Instalar paquetes
+ptr install files error timestamp
+
+# Ver paquetes instalados
+ptr list
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <%- include('components/footer') %>

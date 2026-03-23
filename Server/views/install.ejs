@@ -1,0 +1,113 @@
+<%- include('components/head') %>
+
+    <link rel="stylesheet" href="/styles/install.css">
+
+
+    <body>
+
+        <%- include('components/header') %>
+
+            <div class="container">
+                <div class="page-title fade-in-down">
+                    <h2>Instalación de PTR</h2>
+                    <p>Guía completa para instalar el gestor de paquetes Node.js en tu sistema</p>
+                </div>
+
+                <div class="content">
+                    <h2 class="fade-in-down">Instalación Rápida</h2>
+
+                    <div class="install-box primary fade-in-left delay-1">
+                        <h3>Opción 1: Script de Instalación <span class="badge recommended">RECOMENDADO</span></h3>
+                        <p>Ejecuta este comando en tu terminal:</p>
+                        <pre><code>curl -fsSL <%= serverUrl %>/install.sh | bash</code></pre>
+                        <p><strong>Después de la instalación, activa el comando ptr:</strong></p>
+                        <pre><code># Opción A: Agregar al PATH temporalmente
+export PATH="$PATH:$HOME/.ptr/bin"
+ptr --help
+
+# Opción B: Recargar la configuración del shell
+source ~/.bashrc   # Si usas bash
+source ~/.zshrc    # Si usas zsh
+
+# Opción C: Abrir una nueva terminal (recomendado)</code></pre>
+                    </div>
+
+                    <div class="install-box fade-in-right delay-2">
+                        <h3>Opción 2: Instalación Manual desde Git</h3>
+                        <pre><code>git clone &lt;repository&gt;
+cd libraries
+npm install
+npm link
+
+# Configurar servidor remoto
+ptr config set-remote <%= serverUrl %></code></pre>
+                    </div>
+
+                    <div class="install-box fade-in-left delay-3">
+                        <h3>Opción 3: Descarga directa del tarball</h3>
+                        <pre><code>curl -o ptr.tar.gz <%= serverUrl %>/releases/latest.tar.gz
+tar -xzf ptr.tar.gz
+cd ptr
+npm install
+npm link</code></pre>
+                    </div>
+
+                    <h2>Verificar Instalación</h2>
+                    <pre><code>ptr --version
+ptr --help
+ptr list -a</code></pre>
+
+                    <h2>📦 Comandos Disponibles</h2>
+
+                    <div class="commands-list">
+                        <h3>Gestión de Proyectos</h3>
+                        <ul>
+                            <li><code>ptr init [nombre-proyecto]</code> - Inicializar un nuevo proyecto PTR</li>
+                            <li><code>ptr install &lt;package-name&gt; [version]</code> - Instalar un paquete</li>
+                            <li><code>ptr uninstall &lt;package-name&gt;</code> - Desinstalar un paquete</li>
+                            <li><code>ptr list</code> - Listar paquetes instalados</li>
+                            <li><code>ptr list -a</code> - Listar paquetes disponibles</li>
+                        </ul>
+
+                        <h3>Configuración</h3>
+                        <ul>
+                            <li><code>ptr config</code> - Ver configuración actual</li>
+                            <li><code>ptr config set-remote &lt;url&gt;</code> - Configurar registry remoto</li>
+                            <li><code>ptr config set-local</code> - Volver a registry local</li>
+                        </ul>
+                    </div>
+
+                    <h2>🌐 Endpoints API Disponibles</h2>
+                    <ul class="endpoint-list">
+                        <li><span class="method">GET</span> <code><%= serverUrl %>/api/packages</code> - Listar todos
+                            los paquetes</li>
+                        <li><span class="method">GET</span> <code><%= serverUrl %>/api/packages/{name}</code> -
+                            Información de un paquete específico</li>
+                        <li><span class="method">GET</span>
+                            <code><%= serverUrl %>/api/packages/{name}/{version}/download</code>
+                            - Descargar un paquete
+                        </li>
+                        <li><span class="method">GET</span> <code><%= serverUrl %>/install.sh</code> - Script de
+                            instalación
+                        </li>
+                        <li><span class="method">GET</span> <code><%= serverUrl %>/releases/latest.tar.gz</code> -
+                            Último release</li>
+                    </ul>
+
+                    <h2>Primer Uso</h2>
+                    <pre><code># Crear un nuevo proyecto
+mkdir mi-proyecto
+cd mi-proyecto
+
+# Inicializar
+ptr init
+
+# Instalar paquetes
+ptr install files
+ptr install error
+ptr install timestamp</code></pre>
+                </div>
+
+            </div>
+
+            <%- include('components/footer') %>

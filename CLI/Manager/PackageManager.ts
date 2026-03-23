@@ -1,40 +1,19 @@
-import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import Colors from "../Utils/Colors.ts";
 import Config from "../Utils/Config.ts";
+
+import type { PtrManifest } from "./interface/PtrManifest.ts";
+import type { Registry } from "./interface/Registry.ts";
+import type { ProjectConfig } from "./interface/ProjectConfig.ts";
+
+import Directory from "../../packages/directory/Directory.ts";
+import Files from "../../packages/files/Files.ts";
 
 // Obtener __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-/**
- * Interfaz para el manifiesto ptr.json de cada paquete
- */
-interface PtrManifest {
-    name: string;
-    version: string;
-    description: string;
-    main: string;
-    author: string;
-    license: string;
-    dependencies: Record<string, string>;
-    files: string[];
-}
-
-/**
- * Interfaz para el registro de paquetes
- */
-interface Registry {
-    packages: Record<string, {
-        versions: Record<string, {
-            path: string;
-            dependencies: Record<string, string>;
-            published: string;
-        }>;
-        latest: string;
-    }>;
-}
 
 /**
  * Gestor de paquetes PTR
@@ -42,15 +21,20 @@ interface Registry {
  */
 class PackageManager {
     private registryPath: string;
-    private packagesDir: string;
     private installedDir: string;
     private projectRoot: string;
     private config: Config;
 
+    private FILES: Files;
+    private DIRECTORY: Directory;
+
     constructor(projectRoot?: string) {
+
+        this.FILES = new Files();
+        this.DIRECTORY = new Directory();
+
         this.projectRoot = projectRoot || process.cwd();
         this.registryPath = path.join(__dirname, "../../registry.json");
-        this.packagesDir = path.join(__dirname, "../../packages");
         this.installedDir = path.join(this.projectRoot, "ptr_modules");
         this.config = new Config();
     }
@@ -59,10 +43,10 @@ class PackageManager {
      * Lee el registro de paquetes disponibles
      */
     private readRegistry(): Registry {
-        if (!fs.existsSync(this.registryPath)) {
+        if (!this.DIRECTORY.exists(this.registryPath)) {
             throw new Error("Registry not found. PTR system is corrupted.");
         }
-        return JSON.parse(fs.readFileSync(this.registryPath, "utf-8"));
+        return JSON.parse(this.FILES.read(this.registryPath));
     }
 
     /**
@@ -70,10 +54,55 @@ class PackageManager {
      */
     private readManifest(packagePath: string): PtrManifest {
         const manifestPath = path.join(packagePath, "ptr.json");
-        if (!fs.existsSync(manifestPath)) {
+        if (!this.DIRECTORY.exists(manifestPath)) {
             throw new Error(`Manifest not found in ${packagePath}`);
         }
-        return JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+        return JSON.parse(this.FILES.read(manifestPath));
+    }
+
+    /**
+     * Lee el manifiesto ptr.json del proyecto
+     */
+    private readProjectManifest(): ProjectConfig | null {
+        const manifestPath = path.join(this.projectRoot, "ptr.json");
+        
+        if (!this.DIRECTORY.exists(manifestPath)) {
+            return null;
+        }
+        
+        try {
+            return JSON.parse(this.FILES.read(manifestPath));
+        } catch (error) {
+            console.log(Colors.warning("Error al leer ptr.json del proyecto"));
+            return null;
+        }
+    }
+
+    /**
+     * Escribe el manifiesto ptr.json del proyecto
+     */
+    private writeProjectManifest(manifest: ProjectConfig): void {
+        const manifestPath = path.join(this.projectRoot, "ptr.json");
+        this.FILES.write(manifestPath, JSON.stringify(manifest, null, 2));
+    }
+
+    /**
+     * Lee el manifiesto ptr-lock.json del proyecto
+     */
+    private readLockFile(): Record<string, string> {
+        const lockPath = path.join(this.projectRoot, "ptr-lock.json");
+        
+        if (!this.DIRECTORY.exists(lockPath)) {
+            return {};
+        }
+        
+        try {
+            const lockFile = JSON.parse(this.FILES.read(lockPath));
+            return lockFile.installed || {};
+        } catch (error) {
+            console.log(Colors.warning("Error al leer ptr-lock.json, creando uno nuevo"));
+            return {};
+        }
     }
 
     /**
@@ -86,7 +115,7 @@ class PackageManager {
             installed,
             generated: new Date().toISOString()
         };
-        fs.writeFileSync(lockPath, JSON.stringify(lockContent, null, 2));
+        this.FILES.write(lockPath, JSON.stringify(lockContent, null, 2));
     }
 
     /**
@@ -124,27 +153,22 @@ class PackageManager {
 
             // Crear directorio del paquete
             const destPath = path.join(this.installedDir, packageName);
-            if (!fs.existsSync(destPath)) {
-                fs.mkdirSync(destPath, { recursive: true });
-            }
+            this.DIRECTORY.exists(destPath, true);
 
             // Escribir todos los archivos
             for (const [filename, content] of Object.entries(data.files)) {
                 const filePath = path.join(destPath, filename);
                 const fileDir = path.dirname(filePath);
 
-                if (!fs.existsSync(fileDir)) {
-                    fs.mkdirSync(fileDir, { recursive: true });
-                }
+                this.DIRECTORY.exists(fileDir, true);
 
-                fs.writeFileSync(filePath, content, "utf-8");
+                this.FILES.write(filePath, content);
             }
 
             // Escribir el manifiesto
-            fs.writeFileSync(
+            this.FILES.write(
                 path.join(destPath, "ptr.json"),
                 JSON.stringify(data.manifest, null, 2),
-                "utf-8"
             );
 
             console.log(Colors.success(`  ✓ ${packageName}@${version} descargado`));
@@ -158,9 +182,8 @@ class PackageManager {
      * Copia un paquete al directorio ptr_modules
      */
     private copyPackage(sourcePath: string, destPath: string): void {
-        if (!fs.existsSync(destPath)) {
-            fs.mkdirSync(destPath, { recursive: true });
-        }
+        // Crear directorio del paquete si no existe
+        this.DIRECTORY.exists(destPath, true);
 
         const manifest = this.readManifest(sourcePath);
 
@@ -169,15 +192,22 @@ class PackageManager {
             const srcFile = path.join(sourcePath, file);
             const destFile = path.join(destPath, file);
 
-            if (fs.statSync(srcFile).isDirectory()) {
+            // Verificar si es un directorio intentando obtener su contenido
+            try {
+                this.DIRECTORY.getDirectoryContents(srcFile);
+                // Si no lanza error, es un directorio
                 this.copyDirectory(srcFile, destFile);
-            } else {
-                fs.copyFileSync(srcFile, destFile);
+            } catch {
+                // Si lanza error, es un archivo
+                // Crear el directorio padre del archivo si no existe
+                const destFileDir = path.dirname(destFile);
+                this.DIRECTORY.exists(destFileDir, true);
+                this.FILES.copy(srcFile, destFile);
             }
         }
 
         // Copiar el manifiesto
-        fs.copyFileSync(
+        this.FILES.copy(
             path.join(sourcePath, "ptr.json"),
             path.join(destPath, "ptr.json")
         );
@@ -187,21 +217,23 @@ class PackageManager {
      * Copia un directorio recursivamente
      */
     private copyDirectory(source: string, destination: string): void {
-        if (!fs.existsSync(destination)) {
-            fs.mkdirSync(destination, { recursive: true });
+        // Crear directorio de destino si no existe
+        this.DIRECTORY.exists(destination, true);
+
+        const dirContents = this.DIRECTORY.getDirectoryContents(source);
+
+        // Copiar todos los subdirectorios
+        for (const dir of dirContents.directories) {
+            const dirName = path.basename(dir);
+            const destPath = path.join(destination, dirName);
+            this.copyDirectory(dir, destPath);
         }
 
-        const entries = fs.readdirSync(source, { withFileTypes: true });
-
-        for (const entry of entries) {
-            const srcPath = path.join(source, entry.name);
-            const destPath = path.join(destination, entry.name);
-
-            if (entry.isDirectory()) {
-                this.copyDirectory(srcPath, destPath);
-            } else {
-                fs.copyFileSync(srcPath, destPath);
-            }
+        // Copiar todos los archivos
+        for (const file of dirContents.files) {
+            const fileName = path.basename(file);
+            const destPath = path.join(destination, fileName);
+            this.FILES.copy(file, destPath);
         }
     }
 
@@ -272,14 +304,36 @@ class PackageManager {
             const destPath = path.join(this.installedDir, packageName);
             const manifest = this.readManifest(destPath);
 
+            // Leer paquetes ya instalados
+            const installed: Record<string, string> = this.readLockFile();
+            
+            // Registrar el paquete principal
+            installed[packageName] = manifest.version;
+
             // Instalar dependencias recursivamente
             if (manifest.dependencies && Object.keys(manifest.dependencies).length > 0) {
                 console.log(Colors.info(`\n  Instalando dependencias de ${packageName}...`));
 
                 for (const [depName, depVersion] of Object.entries(manifest.dependencies)) {
                     await this.downloadPackage(depName, depVersion);
+                    const depDestPath = path.join(this.installedDir, depName);
+                    const depManifest = this.readManifest(depDestPath);
+                    installed[depName] = depManifest.version;
                 }
             }
+
+            // Actualizar ptr.json del proyecto
+            const projectManifest = this.readProjectManifest();
+            if (projectManifest) {
+                projectManifest.dependencies[packageName] = version;
+                this.writeProjectManifest(projectManifest);
+            } else {
+                console.log(Colors.warning("\n⚠️  Advertencia: ptr.json no encontrado. Las dependencias no se registrarán en el manifiesto del proyecto."));
+                console.log(Colors.dim + "   Ejecuta 'ptr init' para crear un proyecto PTR" + Colors.reset + "\n");
+            }
+
+            // Escribir lock file con todos los paquetes (anteriores + nuevos)
+            this.writeLockFile(installed);
 
             console.log(Colors.success(`\n✅ ${packageName}@${version} instalado correctamente\n`));
 
@@ -302,11 +356,16 @@ class PackageManager {
 
         const targetVersion = version === "latest" ? pkg.latest : version;
 
+        // Asegurar que el directorio ptr_modules existe
+        this.DIRECTORY.exists(this.installedDir, true);
+
         // Resolver todas las dependencias
         const dependencies = this.resolveDependencies(packageName, targetVersion);
 
+        // Leer paquetes ya instalados
+        const installed: Record<string, string> = this.readLockFile();
+        
         // Instalar cada paquete
-        const installed: Record<string, string> = {};
         for (const [pkgName, pkgPath] of dependencies) {
             const sourcePath = path.join(__dirname, "../..", pkgPath);
             const destPath = path.join(this.installedDir, pkgName);
@@ -318,7 +377,17 @@ class PackageManager {
             installed[pkgName] = manifest.version;
         }
 
-        // Escribir lock file
+        // Actualizar ptr.json del proyecto
+        const projectManifest = this.readProjectManifest();
+        if (projectManifest) {
+            projectManifest.dependencies[packageName] = version;
+            this.writeProjectManifest(projectManifest);
+        } else {
+            console.log(Colors.warning("\n⚠️  Advertencia: ptr.json no encontrado. Las dependencias no se registrarán en el manifiesto del proyecto."));
+            console.log(Colors.dim + "   Ejecuta 'ptr init' para crear un proyecto PTR" + Colors.reset + "\n");
+        }
+
+        // Escribir lock file con todos los paquetes (anteriores + nuevos)
         this.writeLockFile(installed);
 
         const depCount = dependencies.size - 1;
@@ -334,12 +403,26 @@ class PackageManager {
 
         const packagePath = path.join(this.installedDir, packageName);
 
-        if (!fs.existsSync(packagePath)) {
+        if (!this.DIRECTORY.exists(packagePath)) {
             throw new Error(`Package ${packageName} is not installed`);
         }
 
-        // Eliminar recursivamente
-        fs.rmSync(packagePath, { recursive: true, force: true });
+        // Eliminar recursivamente usando Directory
+        this.DIRECTORY.deleteDirectory(packagePath);
+
+        // Actualizar ptr.json del proyecto
+        const projectManifest = this.readProjectManifest();
+        if (projectManifest && projectManifest.dependencies[packageName]) {
+            delete projectManifest.dependencies[packageName];
+            this.writeProjectManifest(projectManifest);
+        }
+
+        // Leer paquetes instalados y eliminar el desinstalado
+        const installed = this.readLockFile();
+        delete installed[packageName];
+
+        // Actualizar lock file
+        this.writeLockFile(installed);
 
         console.log(Colors.success(`Desinstalado ${Colors.pkg(packageName)} correctamente`) + "\n");
     }
@@ -357,8 +440,8 @@ class PackageManager {
             console.log(`  ${Colors.pkg(name)}${Colors.gray}@${pkg.latest}${Colors.reset}`);
             const pkgInfo = pkg.versions[pkg.latest];
             if (pkgInfo) {
-                const deps = Object.keys(pkgInfo.dependencies);
-                if (deps.length > 0) {
+                if (Object.keys(pkgInfo.dependencies).length > 0) {
+                    const deps = Object.keys(pkgInfo.dependencies);
                     console.log(`    ${Colors.dim}Dependencias: ${deps.map(d => Colors.yellow + d + Colors.reset).join(", ")}${Colors.reset}`);
                 }
             }
@@ -372,12 +455,12 @@ class PackageManager {
     public listInstalled(): void {
         const lockPath = path.join(this.projectRoot, "ptr-lock.json");
 
-        if (!fs.existsSync(lockPath)) {
+        if (!this.DIRECTORY.exists(lockPath)) {
             console.log(Colors.warning("No hay paquetes instalados aún") + "\n");
             return;
         }
 
-        const lockFile = JSON.parse(fs.readFileSync(lockPath, "utf-8"));
+        const lockFile = JSON.parse(this.FILES.read(lockPath));
 
         console.log(Colors.title("📦", "Paquetes PTR Instalados"));
         console.log(Colors.line());

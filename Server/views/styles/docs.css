@@ -1,0 +1,194 @@
+/* ==========================================
+   ESTILOS ESPECÍFICOS - PÁGINA DOCUMENTACIÓN
+   ========================================== */
+
+/* =================== LAYOUT =================== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 30px;
+}
+
+/* =================== DOC SECTION =================== */
+.doc-section {
+    background: #1e293b;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    padding: 35px;
+    margin-bottom: 30px;
+}
+
+.doc-section h3 {
+    color: #bfdbfe;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #334155;
+}
+
+.doc-section h4 {
+    color: #93c5fd;
+    font-size: 1.3rem;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.doc-section p {
+    color: #e2e8f0;
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+/* =================== COMMAND LIST =================== */
+.command-list {
+    list-style: none;
+    padding: 0;
+}
+
+.command-list li {
+    background: #0f172a;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border-left: 3px solid #3b82f6;
+}
+
+.command-list .cmd {
+    color: #93c5fd;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.command-list .desc {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+/* =================== NOTES AND WARNINGS =================== */
+.note {
+    background: #1e3a8a;
+    border-left: 4px solid #60a5fa;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 6px;
+}
+
+.note strong {
+    color: #93c5fd;
+}
+
+.warning {
+    background: #78350f;
+    border-left: 4px solid #f59e0b;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 6px;
+}
+
+.warning strong {
+    color: #fbbf24;
+}
+
+/* =================== TABLE =================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+}
+
+th {
+    background: #0f172a;
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+td {
+    color: #cbd5e1;
+}
+
+td code {
+    background: #334155;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #60a5fa;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 20px;
+    }
+
+    .doc-section {
+        padding: 25px;
+    }
+
+    .doc-section h3 {
+        font-size: 1.5rem;
+    }
+
+    .doc-section h4 {
+        font-size: 1.2rem;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 10px;
+    }
+
+    .doc-section {
+        padding: 20px 15px;
+    }
+
+    .doc-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .doc-section h4 {
+        font-size: 1.1rem;
+    }
+
+    .command-list li {
+        padding: 12px;
+    }
+
+    .command-list .cmd {
+        font-size: 0.85rem;
+        word-break: break-all;
+    }
+
+    .note,
+    .warning {
+        padding: 12px 15px;
+    }
+
+    table {
+        font-size: 0.8rem;
+        display: block;
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        padding: 8px;
+    }
+}

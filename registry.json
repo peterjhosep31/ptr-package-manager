@@ -1,10 +1,32 @@
 {
     "packages": {
+        "prototype": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/prototype",
+                    "dependencies": {},
+                    "published": "2026-01-12T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
+        "error": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/error",
+                    "dependencies": {},
+                    "published": "2026-01-12T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
         "directory": {
             "versions": {
                 "1.0.0": {
                     "path": "packages/directory",
-                    "dependencies": {},
+                    "dependencies": {
+                        "error": "^1.0.0"
+                    },
                     "published": "2026-01-04T00:00:00.000Z"
                 }
             },
@@ -15,18 +37,21 @@
                 "1.0.0": {
                     "path": "packages/files",
                     "dependencies": {
-                        "directory": "^1.0.0"
+                        "directory": "^1.0.0",
+                        "error": "^1.0.0"
                     },
                     "published": "2026-01-04T00:00:00.000Z"
                 }
             },
             "latest": "1.0.0"
         },
-        "encripted": {
+        "encrypted": {
             "versions": {
                 "1.0.0": {
-                    "path": "packages/encripted",
-                    "dependencies": {},
+                    "path": "packages/encrypted",
+                    "dependencies": {
+                        "error": "^1.0.0"
+                    },
                     "published": "2026-01-04T00:00:00.000Z"
                 }
             },

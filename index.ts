@@ -1,7 +1,4 @@
-/// <reference path="./Prototype/Arrays/Array.d.ts" />
-/// <reference path="./Prototype/Strings/String.d.ts" />
-/// <reference path="./Prototype/Object/Object.d.ts" />
-
+process.title = 'Libraries';
 
 /**
  * Punto de entrada principal de la biblioteca.
@@ -14,8 +11,3 @@
  * @version 1.0.0
  */
 import './Server/server.ts';
-
-// Exportar para que los usuarios puedan importar y cargar automáticamente
-import "./Prototype/Arrays/Array.ts";
-import "./Prototype/Object/Object.ts";
-import "./Prototype/Strings/String.ts";

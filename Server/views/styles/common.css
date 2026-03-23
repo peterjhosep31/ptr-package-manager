@@ -1,0 +1,578 @@
+/* ==========================================
+   ESTILOS COMUNES - TODAS LAS PÁGINAS
+   ========================================== */
+
+/* =================== RESET Y BASE =================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: #e2e8f0;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-top: 110px;
+}
+
+/* =================== ANIMACIONES GLOBALES =================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Clases de animación directas */
+.fade-in-up {
+    animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.fade-in-down {
+    animation: fadeInDown 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.fade-in-left {
+    animation: fadeInLeft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.fade-in-right {
+    animation: fadeInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.scale-in {
+    animation: scaleIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.rotate-in {
+    animation: rotateIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.bounce-in {
+    animation: bounceIn 1.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Delays para animaciones escalonadas */
+.delay-1 {
+    animation-delay: 0.15s;
+}
+
+.delay-2 {
+    animation-delay: 0.3s;
+}
+
+.delay-3 {
+    animation-delay: 0.45s;
+}
+
+.delay-4 {
+    animation-delay: 0.6s;
+}
+
+.delay-5 {
+    animation-delay: 0.75s;
+}
+
+.delay-6 {
+    animation-delay: 0.9s;
+}
+
+.delay-7 {
+    animation-delay: 1.05s;
+}
+
+.delay-8 {
+    animation-delay: 1.2s;
+}
+
+/* Animación de pulso continuo */
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Animación de brillo */
+@keyframes shine {
+    0% {
+        background-position: -100%;
+    }
+
+    100% {
+        background-position: 200%;
+    }
+}
+
+/* Hover con elevación */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.3);
+}
+
+/* =================== HEADER =================== */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: white;
+    padding: 20px 0;
+    border-bottom: 2px solid #60a5fa;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: slideInDown 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeInLeft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+    text-decoration: none;
+    color: #fff;
+}
+
+.logo img {
+    height: 70px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo img:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.logo h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+    animation: fadeInRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+}
+
+nav a:hover::before,
+nav a.active::before {
+    left: 0;
+}
+
+nav a:hover,
+nav a.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* =================== BODY GENERAL =================== */
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 40px 30px;
+}
+
+h2 {
+    color: #93c5fd;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(147, 197, 253, 0.3);
+}
+
+h3 {
+    color: #bfdbfe;
+    font-size: 1.8rem;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    text-shadow: 0 1px 4px rgba(191, 219, 254, 0.2);
+}
+
+h4 {
+    color: #93c5fd;
+    font-size: 1.3rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #e2e8f0;
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+pre {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 15px 0;
+    border: 1px solid #334155;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+pre:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
+}
+
+pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+pre:hover::before {
+    opacity: 1;
+}
+
+code {
+    color: #e2e8f0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+li {
+    margin-bottom: 8px;
+    color: #e2e8f0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+li:hover {
+    transform: translateX(5px);
+}
+
+/* Enlaces animados */
+a:not([class]) {
+    color: #93c5fd;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a:not([class])::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #93c5fd;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a:not([class]):hover {
+    color: #bfdbfe;
+}
+
+a:not([class]):hover::after {
+    width: 100%;
+}
+
+/* =================== FOOTER =================== */
+footer {
+    background: #0f172a;
+    padding: 30px;
+    text-align: center;
+    color: #94a3b8;
+    border-top: 1px solid #334155;
+    margin-top: 40px;
+    animation: fadeIn 1.2s ease-out 0.6s both;
+}
+
+footer strong {
+    color: #60a5fa;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+footer:hover strong {
+    color: #93c5fd;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 768px) {
+    body {
+        padding-top: 110px;
+    }
+
+    header {
+        padding: 15px 0;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .logo {
+        justify-content: center;
+    }
+
+    .logo img {
+        height: 60px;
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    .container {
+        padding: 20px 15px;
+        margin: 20px auto;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+        padding-top: 100px;
+    }
+
+    header {
+        padding: 15px 0;
+    }
+
+    .header-content {
+        padding: 0 15px;
+    }
+
+    .logo img {
+        height: 50px;
+    }
+
+    .logo h1 {
+        font-size: 1.3rem;
+    }
+
+    nav {
+        gap: 10px;
+    }
+
+    nav a {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    pre {
+        padding: 15px;
+        font-size: 0.8rem;
+    }
+
+    footer {
+        padding: 20px 15px;
+        font-size: 0.9rem;
+    }
+}

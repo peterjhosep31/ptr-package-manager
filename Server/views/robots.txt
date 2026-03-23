@@ -1,0 +1,12 @@
+# robots.txt para PTR Package Manager
+
+User-agent: *
+Allow: /
+Allow: /install
+Allow: /packages
+Allow: /docs
+
+Disallow: /api/
+Disallow: /scripts/
+
+Sitemap: https://ptr.io/sitemap.xml

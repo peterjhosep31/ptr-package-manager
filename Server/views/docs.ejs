@@ -1,0 +1,290 @@
+<%- include('components/head') %>
+
+    <link rel="stylesheet" href="/styles/docs.css">
+
+    <body>
+
+        <%- include('components/header') %>
+
+            <div class="container">
+                <h2 class="fade-in-down">📚 Documentación</h2>
+
+                <div class="doc-section slide-in-up delay-1">
+                    <h3>Comandos Principales</h3>
+
+                    <h4>Gestión de Proyectos</h4>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">ptr init [nombre-proyecto]</span>
+                            <span class="desc">Inicializa un nuevo proyecto PTR creando el archivo ptr.json con la
+                                configuración
+                                básica</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr install &lt;package-name&gt; [version]</span>
+                            <span class="desc">Instala un paquete del registry. Si no se especifica versión, instala la
+                                última disponible</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr uninstall &lt;package-name&gt;</span>
+                            <span class="desc">Desinstala un paquete previamente instalado del proyecto</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr list</span>
+                            <span class="desc">Lista todos los paquetes instalados en el proyecto actual</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr list -a</span>
+                            <span class="desc">Lista todos los paquetes disponibles en el registry</span>
+                        </li>
+                    </ul>
+
+                    <h4>Configuración</h4>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">ptr config</span>
+                            <span class="desc">Muestra la configuración actual del sistema PTR</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr config set-remote &lt;url&gt;</span>
+                            <span class="desc">Configura un servidor remoto como fuente de paquetes</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr config set-local</span>
+                            <span class="desc">Vuelve a usar el registry local en lugar del remoto</span>
+                        </li>
+                    </ul>
+
+                    <h4>Ayuda</h4>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">ptr --help</span>
+                            <span class="desc">Muestra la ayuda general con todos los comandos disponibles</span>
+                        </li>
+                        <li>
+                            <span class="cmd">ptr --version</span>
+                            <span class="desc">Muestra la versión actual de PTR instalada</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="doc-section slide-in-up delay-2">
+                    <h3>Uso Básico</h3>
+
+                    <h4>Crear un Nuevo Proyecto</h4>
+                    <pre>
+                    <code>
+# Crear directorio del proyecto
+mkdir mi-proyecto
+cd mi-proyecto
+
+# Inicializar proyecto PTR
+ptr init
+
+# Instalar paquetes
+ptr install files
+ptr install error
+                    </code>
+                </pre>
+
+                    <div class="note">
+                        <strong>Nota:</strong> El comando <code>init</code> crea un archivo <code>ptr.json</code> en el
+                        directorio actual que mantiene el registro de dependencias del proyecto.
+                    </div>
+
+                    <h4>Instalar Paquetes</h4>
+                    <pre>
+                    <code>
+# Instalar última versión
+ptr install files
+
+# Instalar versión específica
+ptr install files 1.0.0
+
+# Instalar múltiples paquetes
+ptr install files error timestamp encrypted
+                    </code>
+                </pre>
+
+                    <h4>Usar Paquetes en tu Código</h4>
+                    <pre>
+                    <code>
+// TypeScript/JavaScript
+import Files from 'ptr-files';
+import Directory from 'ptr-directory';
+import Timestamp from 'ptr-timestamp';
+import Encrypted from 'ptr-encrypted';
+
+// Leer y escribir archivos
+const files = new Files();
+files.write('config.json', '{"app": "PTR"}');
+const content = files.read('config.json');
+
+// Manejar timestamps Unix
+const ts = new Timestamp();
+console.log(ts.now()); // Timestamp actual
+console.log(ts.format(Date.now())); // Formatear fecha
+
+// Encriptar credenciales
+const encrypt = new Encrypted();
+const hashed = encrypt.hash('mi_password_secreta');
+                    </code>
+                </pre>
+                </div>
+
+                <div class="doc-section slide-in-up delay-3">
+                    <h3>Configuración Remota</h3>
+
+                    <h4>Conectar a un Registry Remoto</h4>
+                    <pre>
+                        <code>
+# Configurar servidor remoto
+ptr config set-remote <%= serverUrl %>
+
+# Verificar configuración
+ptr config
+
+# Instalar desde remoto
+ptr install files
+                        </code>
+                    </pre>
+
+                    <div class="note">
+                        <strong>Ventaja:</strong> Al usar un registry remoto, puedes compartir paquetes entre múltiples
+                        proyectos y equipos sin necesidad de copiar archivos manualmente.
+                    </div>
+
+                    <h4>Volver a Registry Local</h4>
+                    <pre><code>ptr config set-local</code></pre>
+                </div>
+
+                <div class="doc-section slide-in-up delay-4">
+                    <h3>Endpoints de la API</h3>
+
+                    <p>PTR proporciona una API REST para acceder programáticamente a los paquetes:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Método</th>
+                                <th>Endpoint</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GET</td>
+                                <td><code>/api/packages</code></td>
+                                <td>Lista todos los paquetes disponibles</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td><code>/api/packages/{name}</code></td>
+                                <td>Información de un paquete específico</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td><code>/api/packages/{name}/{version}/download</code></td>
+                                <td>Descarga el paquete especificado</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td><code>/api/packages/{name}/{version}/files/{file}</code></td>
+                                <td>Obtiene un archivo específico del paquete</td>
+                            </tr>
+                            <tr>
+                                <td>GET</td>
+                                <td><code>/install.sh</code></td>
+                                <td>Script de instalación de PTR</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Ejemplo de Uso de la API</h4>
+                    <pre>
+                        <code>
+# Listar paquetes
+curl <%= serverUrl %>/api/packages
+
+# Obtener info de un paquete
+curl <%= serverUrl %>/api/packages/files
+
+# Descargar paquete
+curl <%= serverUrl %>/api/packages/files/1.0.0/download -o files.tar.gz
+                        </code>
+                    </pre>
+                </div>
+
+                <div class="doc-section slide-in-up delay-5">
+                    <h3>Gestión de Dependencias</h3>
+
+                    <p>PTR maneja automáticamente las dependencias entre paquetes. Cuando instalas un paquete que
+                        requiere otros, PTR los instala automáticamente.</p>
+
+                    <h4>Ejemplo de Dependencias Automáticas</h4>
+                    <pre>
+                        <code>
+# El paquete 'files' requiere 'directory' y 'error'
+ptr install files
+
+# PTR instala automáticamente:
+# ✓ files v1.0.0
+# ✓ directory v1.0.0 (dependencia de files)
+# ✓ error v1.0.0 (dependencia de files y directory)
+
+# El paquete 'encrypted' requiere 'error'
+ptr install encrypted
+
+# PTR instala automáticamente:
+# ✓ encrypted v1.0.0
+# ✓ error v1.0.0 (si no está instalado)
+                        </code>
+                    </pre>
+
+                    <div class="warning">
+                        <strong>Importante:</strong> Las dependencias se resuelven según versionado semántico (^1.0.0
+                        permite versiones compatibles). PTR verifica y evita conflictos de versiones automáticamente.
+                    </div>
+                </div>
+
+                <div class="doc-section slide-in-up delay-6">
+                    <h3>Solución de Problemas</h3>
+
+                    <h4>El comando ptr no se encuentra</h4>
+                    <p>Asegúrate de que PTR está en tu PATH:</p>
+                    <pre>
+                        <code>
+export PATH="$PATH:$HOME/.ptr/bin"
+
+# O recarga tu shell
+source ~/.bashrc  # bash
+source ~/.zshrc   # zsh
+                        </code>
+                    </pre>
+
+                    <h4>Error al instalar paquetes</h4>
+                    <p>Verifica la conexión al registry:</p>
+                    <pre>
+                        <code>
+# Ver configuración actual
+ptr config
+
+# Probar conexión al servidor
+curl <%= serverUrl %>/api/packages
+                        </code>
+                    </pre>
+
+                    <h4>Reinstalar PTR</h4>
+                    <pre>
+                        <code>
+# Eliminar instalación anterior
+rm -rf ~/.ptr
+
+# Reinstalar
+curl -fsSL <%= serverUrl %>/install.sh | bash
+                        </code>
+                    </pre>
+                </div>
+            </div>
+
+            <%- include('components/footer') %>

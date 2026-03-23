@@ -1,18 +1,15 @@
 {
-    "name": "libraryes",
+    "name": "libraries",
     "version": "1.0.0",
     "description": "",
     "main": "index.ts",
     "type": "module",
-    "sideEffects": [
-        "./Prototype/**/*.ts",
-        "./Prototype/**/*.d.ts"
-    ],
     "directories": {
         "test": "tests",
         "dev": ""
     },
     "devDependencies": {
+        "@types/better-sqlite3": "^7.6.13",
         "@types/express": "5.0.5",
         "@types/node": "24.10.1",
         "@typescript-eslint/eslint-plugin": "8.48.1",
@@ -20,14 +17,21 @@
         "@vitest/ui": "4.0.15",
         "eslint": "9.39.1",
         "nodemon": "3.1.11",
-        "ts-node": "10.9.2",
+        "ts-node": "^10.9.2",
+        "tsup": "^8.5.1",
         "typescript": "5.9.3",
         "vitest": "4.0.15"
     },
     "scripts": {
-        "build": "tsc",
-        "dev": "nodemon --watch src --exec ts-node index.ts",
+        "build": "tsc && tsup",
+        "dev": "NODE_ENV=development nodemon --watch Server --watch packages --watch CLI --ext ts,ejs --exec tsx index.ts",
+        "dev:local": "NODE_ENV=development tsx index.ts",
         "start": "node build/index.js",
+        "prod:up": "docker compose up -d --build",
+        "prod:down": "docker compose down",
+        "prod:restart": "docker compose restart",
+        "prod:rebuild": "docker compose down && docker compose up -d --build",
+        "prod:logs": "docker compose logs -f",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:run": "vitest run",
@@ -41,17 +45,25 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@types/ejs": "^3.1.5",
+        "better-sqlite3": "^12.6.0",
+        "ejs": "^5.0.1",
         "express": "5.1.0",
+        "express-rate-limit": "^8.3.1",
+        "helmet": "^8.1.0",
         "tsx": "^4.21.0"
     },
+    "overrides": {
+        "diff": "^8.0.3"
+    },
     "bin": {
-        "ptr": "./CLI/index.ts"
+        "ptr": "./dist/cli/index.js"
     },
     "files": [
         "build",
         "CLI",
-        "Prototype",
         "Server",
-        "src"
+        "src",
+        "packages/utils"
     ]
 }

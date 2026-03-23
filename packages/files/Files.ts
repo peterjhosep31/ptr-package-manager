@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import Directory from "../Directory/Directory.ts";
-import CustomError from "../Error/Error.ts";
+import Directory from "../directory/index.ts";
+import CustomError from "../error/index.ts";
 
 class Files {
 
@@ -10,7 +10,7 @@ class Files {
         this.DIRECTORY = new Directory();
     }
 
-    readFile(
+    public read(
         filePath: string
     ): string {
 
@@ -31,7 +31,7 @@ class Files {
         }
     }
 
-    writeFile(
+    public write(
         filePath: string,
         data: string
     ): boolean {
@@ -49,7 +49,7 @@ class Files {
         }
     }
 
-    deleteFile(
+    public delete(
         filePath: string
     ): boolean {
 
@@ -66,7 +66,7 @@ class Files {
         }
     }
 
-    renameFile(
+    public rename(
         oldPath: string,
         newPath: string
     ): boolean {
@@ -84,7 +84,7 @@ class Files {
         }
     }
 
-    copyFile(
+    public copy(
         source: string,
         destination: string
     ): boolean {
@@ -102,7 +102,7 @@ class Files {
         }
     }
 
-    replaceInFile(
+    public replace(
         filePath: string,
         searchValue: string,
         replaceValue: string
@@ -110,12 +110,12 @@ class Files {
 
         try {
 
-            const fileContent = this.readFile(filePath);
+            const fileContent = this.read(filePath);
             if (!fileContent) return false;
 
             const updatedContent =
                 fileContent.replace(searchValue, replaceValue);
-            this.writeFile(filePath, updatedContent);
+            this.write(filePath, updatedContent);
             return true;
 
         } catch (error: any) {
@@ -125,7 +125,6 @@ class Files {
             });
         }
     }
-
 
 }
 

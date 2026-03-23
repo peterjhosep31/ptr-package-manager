@@ -8,7 +8,7 @@ Gestor de paquetes personalizado con registry propio y servidor HTTP para distri
 
 ```bash
 # Configurar PTR para usar el servidor remoto
-ptr config set-remote https://library.peterjhosep31.dev
+ptr config set-remote https://<TU_DOMINIO>
 
 # Instalar paquetes
 ptr install files
@@ -18,7 +18,7 @@ ptr install files
 
 ```bash
 git clone <repository>
-cd libraryes
+cd libraries
 npm install
 npm link  # Crea el comando global 'ptr'
 ```
@@ -51,7 +51,7 @@ ptr list -a
 ptr config
 
 # Configurar registry remoto
-ptr config set-remote https://library.peterjhosep31.dev
+ptr config set-remote https://<TU_DOMINIO>
 
 # Volver a registry local
 ptr config set-local
@@ -78,16 +78,16 @@ El servidor se ejecuta en el puerto **3105**.
 
 ```bash
 # Listar todos los paquetes
-GET https://library.peterjhosep31.dev/api/packages
+GET https://<TU_DOMINIO>/api/packages
 
 # Información de un paquete específico
-GET https://library.peterjhosep31.dev/api/packages/files
+GET https://<TU_DOMINIO>/api/packages/files
 
 # Descargar un paquete
-GET https://library.peterjhosep31.dev/api/packages/files/1.0.0/download
+GET https://<TU_DOMINIO>/api/packages/files/1.0.0/download
 
 # Descargar un archivo específico
-GET https://library.peterjhosep31.dev/api/packages/files/1.0.0/files/Files.ts
+GET https://<TU_DOMINIO>/api/packages/files/1.0.0/files/Files.ts
 ```
 
 ## 🐳 Docker
@@ -110,19 +110,19 @@ El servidor estará disponible en `http://localhost:3105`.
 
 - **directory**: Gestión de directorios
 - **files**: Gestión de archivos (depende de `directory`)
-- **encripted**: Sistema de encriptación
+- **encrypted**: Sistema de encriptación
 - **timestamp**: Gestión de timestamps
 
 ## 🔧 Estructura del Proyecto
 
 ```
-libraryes/
+libraries/
 ├── CLI/              # Interfaz de línea de comandos
 ├── Server/           # Servidor HTTP con API REST
 ├── packages/         # Paquetes distribuibles
 │   ├── directory/
 │   ├── files/
-│   ├── encripted/
+│   ├── encrypted/
 │   └── timestamp/
 ├── registry.json     # Registro de paquetes
 └── src/              # Código fuente de desarrollo
@@ -146,7 +146,7 @@ cd mi-proyecto
 ptr init
 
 # 2. Configurar para usar el servidor remoto
-ptr config set-remote https://library.peterjhosep31.dev
+ptr config set-remote https://<TU_DOMINIO>
 
 # 3. Instalar paquetes
 ptr install files    # Instala 'files' y su dependencia 'directory'

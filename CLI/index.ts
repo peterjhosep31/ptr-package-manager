@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 
-import "../Prototype/Arrays/Array.ts";
-import "../Prototype/Object/Object.ts";
-import "../Prototype/Strings/String.ts";
-
 import PackageManager from "./Manager/PackageManager.ts";
-import ProyectInitialize from "./Manager/ProyectInitialize.ts";
+import ProjectInitialize from "./Manager/ProjectInitialize.ts";
 import RequestNotProcessed from "./Manager/RequestNotProcessed.ts";
 import SystemChecker from "./Manager/SystemChecker.ts";
 import Colors from "./Utils/Colors.ts";
@@ -13,22 +9,22 @@ import Config from "./Utils/Config.ts";
 
 (async () => {
     let args = process.argv.slice(2);
-    let comman = args[0];
+    let command = args[0];
     args = args.slice(1);
 
-    if (!!comman === false) {
+    if (!!command === false) {
         console.log(Colors.warning("Debe proporcionar un comando"));
         console.log(`  ${Colors.dim}Ejecute ${Colors.code("ptr --help")} para ver los comandos disponibles${Colors.reset}\n`);
         return;
     }
 
-    comman = comman.toLowerCase();
+    command = command.toLowerCase();
 
     const packageManager = new PackageManager();
     const systemChecker = new SystemChecker();
     const config = new Config();
 
-    switch (comman) {
+    switch (command) {
 
         case "--help": // Comando de ayuda: Muestra todos los comandos disponibles
         case "-h":
@@ -44,7 +40,7 @@ import Config from "./Utils/Config.ts";
                 }
 
                 const projectName = args[0]; // Opcional: nombre del proyecto
-                const initializer = new ProyectInitialize(projectName);
+                const initializer = new ProjectInitialize(projectName);
                 await initializer.init();
             } catch (error) {
                 console.log(Colors.error((error as Error).message) + "\n");
@@ -54,7 +50,7 @@ import Config from "./Utils/Config.ts";
         case "install": // Comando de instalación: Instala un paquete y sus dependencias
         case "-i":
             // Verificar que Node.js esté instalado y que exista package.json
-            if (!(await systemChecker.requireNode())) {
+            if (!(await systemChecker.requireProjectInitialized())) {
                 break;
             }
 
@@ -119,8 +115,8 @@ import Config from "./Utils/Config.ts";
                 break;
             }
 
-            const subcommand = args[0];
-            switch (subcommand) {
+            const subcommandd = args[0];
+            switch (subcommandd) {
                 case "set-remote":
                     if (args.length < 2) {
                         console.log(Colors.error("Debe especificar una URL"));
@@ -147,7 +143,7 @@ import Config from "./Utils/Config.ts";
                     break;
 
                 default:
-                    console.log(Colors.error(`Subcomando desconocido: ${subcommand}`));
+                    console.log(Colors.error(`Subcomando desconocido: ${subcommandd}`));
                     console.log(`  ${Colors.dim}Opciones disponibles:${Colors.reset}`);
                     console.log(`    ${Colors.code("ptr config")} - Ver configuración actual`);
                     console.log(`    ${Colors.code("ptr config set-remote <url>")} - Usar registry remoto`);

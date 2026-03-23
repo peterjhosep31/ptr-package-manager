@@ -1,12 +1,18 @@
 import { exec } from "child_process";
-import fs from "fs";
 import path from "path";
 import { promisify } from "util";
+import Directory from "../../packages/directory/Directory.ts";
 import Colors from "../Utils/Colors.ts";
 
 const execAsync = promisify(exec);
 
 class SystemChecker {
+
+    private DIRECTORY: Directory;
+
+    constructor() {
+        this.DIRECTORY = new Directory();
+    }
 
     /**
      * Verifica si Node.js está instalado en el sistema
@@ -29,8 +35,7 @@ class SystemChecker {
         projectPath: string = process.cwd()
     ): boolean {
         const ptrJsonPath = path.join(projectPath, "ptr.json");
-
-        return fs.existsSync(ptrJsonPath);
+        return this.DIRECTORY.exists(ptrJsonPath);
     }
 
     /**
@@ -59,7 +64,7 @@ class SystemChecker {
         const packageJsonPath = path.join(projectPath, "package.json");
 
         // Si existe package.json, es un proyecto Node.js
-        return fs.existsSync(packageJsonPath);
+        return this.DIRECTORY.exists(packageJsonPath);
     }
 
     /**
@@ -87,31 +92,15 @@ class SystemChecker {
         console.log(Colors.title("⚠️", "Node.js no está instalado en tu sistema"));
         console.log(Colors.line());
         console.log(`  ${Colors.white}Los paquetes PTR están basados en Node.js y requieren que esté instalado.${Colors.reset}`);
-        console.log(Colors.title("📋", "Tienes dos opciones:"));
+        // console.log(Colors.title("📋", "Tienes dos opciones:"));
         console.log(Colors.listItem("1️⃣", `Instalar Node.js:`));
         console.log(`     Visita: ${Colors.cyan}https://nodejs.org/${Colors.reset}`);
         console.log("");
-        console.log(Colors.listItem("2️⃣", `Usar PTR Server (HTTP API):`));
-        console.log(`     Si prefieres usar los paquetes sin instalar Node.js,`);
-        console.log(`     puedes acceder a ellos mediante peticiones HTTP.`);
-        console.log(`     Ejecuta: ${Colors.code("ptr server start")}`);
+        // console.log(Colors.listItem("2️⃣", `Usar PTR Server (HTTP API):`));
+        // console.log(`     Si prefieres usar los paquetes sin instalar Node.js,`);
+        // console.log(`     puedes acceder a ellos mediante peticiones HTTP.`);
+        // console.log(`     Ejecuta: ${Colors.code("ptr server start")}`);
         console.log("");
-    }
-
-    /**
-     * Verifica solo que Node.js esté instalado (para ptr init)
-     * @returns true si Node está instalado, false si no
-     */
-    public async requireNodeForInit(): Promise<boolean> {
-        const { installed, version } = await this.checkNodeInstalled();
-
-        if (!installed) {
-            this.showNodeNotInstalledMessage();
-            return false;
-        }
-
-        console.log(Colors.success(`Node.js ${version} detectado`) + "\n");
-        return true;
     }
 
     /**
