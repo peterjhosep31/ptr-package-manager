@@ -3,7 +3,7 @@ import DataBase from "./DataBase.ts";
 
 const DIRECTORY: Directory = new Directory();
 
-export function resolveDefaultDataBasePath(): string {
+function resolveDefaultDataBasePath(): string {
     return DIRECTORY.joinPath(
         DIRECTORY.baseNameProject(),
         "dataBase",
@@ -11,9 +11,9 @@ export function resolveDefaultDataBasePath(): string {
     );
 }
 
-export function createDataBase(path?: string): DataBase {
+function createDataBase(path?: string): DataBase {
     return new DataBase(path || resolveDefaultDataBasePath());
 }
 
-export { DataBase };
+export { DataBase, createDataBase as createConnection };
 export default DataBase;

@@ -3,14 +3,17 @@
     "version": "1.0.0",
     "description": "Sistema de encriptación para ptr",
     "main": "index.ts",
+    "types": "Encrypted.d.ts",
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "error": "1.0.0"
+        "error": "1.0.0",
+        "sqlite": "1.0.0"
     },
     "files": [
         "index.ts",
         "Encrypted.ts",
-        "Encrypted.d.ts"
+        "Encrypted.d.ts",
+        "models/"
     ]
 }

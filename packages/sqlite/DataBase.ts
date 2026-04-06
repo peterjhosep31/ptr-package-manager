@@ -26,16 +26,11 @@ class DataBase {
         return this._path;
     }
 
-    private initializeDependences() {
-
-        this.DIRECTORY = new Directory();
-    }
-
     public constructor(
         path: string
     ) {
 
-        this.initializeDependences();
+        this.DIRECTORY = new Directory();
 
         this.path = path;
     }
@@ -53,7 +48,7 @@ class DataBase {
         this.db = new DatabaseSync(this.path);
     }
 
-    public getConnection(): DatabaseSync | undefined {
+    public get(): DatabaseSync | undefined {
         return this.db;
     }
 

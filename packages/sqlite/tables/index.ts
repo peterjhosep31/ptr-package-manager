@@ -1,15 +1,15 @@
-// import Directory from "../../directory/Directory.ts";
+import Directory from "../../directory/Directory.ts";
 
-// class Index {
+class Index {
 
-//     private DIRECTORY: Directory;
+    private DIRECTORY: Directory;
 
-//     public constructor() {
-//         this.DIRECTORY = new Directory();
-//     }
+    public constructor() {
+        this.DIRECTORY = new Directory();
+    }
 
-//     search(){
-//         const
-//     }
+    search(){
+        // const TABLES =
+    }
 
-// }
+}
