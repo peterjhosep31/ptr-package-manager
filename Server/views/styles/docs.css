@@ -59,6 +59,7 @@
     font-weight: 600;
     display: block;
     margin-bottom: 5px;
+    overflow-wrap: anywhere;
 }
 
 .command-list .desc {
@@ -146,6 +147,14 @@ td code {
 
     table {
         font-size: 0.9rem;
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
     }
 }
 
@@ -183,8 +192,6 @@ td code {
 
     table {
         font-size: 0.8rem;
-        display: block;
-        overflow-x: auto;
     }
 
     th,

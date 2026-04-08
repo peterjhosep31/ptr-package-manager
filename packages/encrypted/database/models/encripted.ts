@@ -1,4 +1,4 @@
-import type { Columns, Tables } from "../../sqlite/interfaces/interfaceModels";
+import type { Columns, Tables } from "../../../sqlite/interfaces/interfaceModels";
 
 class Encrypted implements Tables {
 
@@ -6,16 +6,37 @@ class Encrypted implements Tables {
         const FIELDS: Columns[] = new Array;
 
         FIELDS.push({
-            field: 'date',
+            field: 'key',
             type: 'varchar',
             primary: true,
-            length: 8
+            length: 80
         })
 
         FIELDS.push({
-            field: 'salt',
+            field: 'jump',
+            type: 'varchar',
+            length: 200,
+            nullable: false
+        });
+
+        FIELDS.push({
+            field: 'startsAt',
             type: 'int',
-            length: 2
+            nullable: false,
+            index: true
+        });
+
+        FIELDS.push({
+            field: 'endsAt',
+            type: 'int',
+            nullable: true,
+            index: true
+        });
+
+        FIELDS.push({
+            field: 'createdAt',
+            type: 'int',
+            nullable: false
         });
 
         return FIELDS;

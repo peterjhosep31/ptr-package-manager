@@ -24,7 +24,7 @@
     },
     "scripts": {
         "build": "tsc && tsup",
-        "dev": "NODE_ENV=development nodemon --watch Server --watch packages --watch CLI --ext ts,ejs --exec tsx index.ts",
+        "dev": "NODE_ENV=development nodemon --inspect=9000 --watch Server --watch packages --watch CLI --ext ts,ejs --exec tsx index.ts",
         "dev:local": "NODE_ENV=development tsx index.ts",
         "start": "node build/index.js",
         "prod:up": "docker compose up -d --build",

@@ -67,6 +67,7 @@
     font-weight: 700;
     color: #93c5fd;
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .package-version {
@@ -151,6 +152,7 @@
     color: #e2e8f0;
     cursor: pointer;
     transition: background 0.3s;
+    overflow-x: auto;
 }
 
 .install-command:hover {

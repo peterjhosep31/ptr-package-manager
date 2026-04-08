@@ -16,6 +16,21 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     padding-top: 110px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
 }
 
 /* =================== ANIMACIONES GLOBALES =================== */
