@@ -56,7 +56,7 @@ import Config from "./Utils/Config.ts";
 
             if (args.length === 0) {
                 console.log(Colors.error("Debe especificar un paquete a instalar"));
-                console.log(`  ${Colors.dim}Uso: ${Colors.code("ptr install <package-name> [version]")}${Colors.reset}\\n`);
+                console.log(`  ${Colors.dim}Uso: ${Colors.code("ptr install <package-name> [version]")}${Colors.reset}\n`);
                 break;
             }
             try {
@@ -64,7 +64,7 @@ import Config from "./Utils/Config.ts";
                 const version = args[1] || "latest";
                 packageManager.install(packageName, version);
             } catch (error) {
-                console.log(Colors.error((error as Error).message) + "\\n");
+                console.log(Colors.error((error as Error).message) + "\n");
             }
             break;
 
@@ -77,13 +77,13 @@ import Config from "./Utils/Config.ts";
 
             if (args.length === 0) {
                 console.log(Colors.error("Debe especificar un paquete a desinstalar"));
-                console.log(`  ${Colors.dim}Uso: ${Colors.code("ptr uninstall <package-name>")}${Colors.reset}\\n`);
+                console.log(`  ${Colors.dim}Uso: ${Colors.code("ptr uninstall <package-name>")}${Colors.reset}\n`);
                 break;
             }
             try {
                 packageManager.uninstall(args[0]!);
             } catch (error) {
-                console.log(Colors.error((error as Error).message) + "\\n");
+                console.log(Colors.error((error as Error).message) + "\n");
             }
             break;
 
@@ -115,8 +115,8 @@ import Config from "./Utils/Config.ts";
                 break;
             }
 
-            const subcommandd = args[0];
-            switch (subcommandd) {
+            const subcommand = args[0];
+            switch (subcommand) {
                 case "set-remote":
                     if (args.length < 2) {
                         console.log(Colors.error("Debe especificar una URL"));
@@ -143,7 +143,7 @@ import Config from "./Utils/Config.ts";
                     break;
 
                 default:
-                    console.log(Colors.error(`Subcomando desconocido: ${subcommandd}`));
+                    console.log(Colors.error(`Subcomando desconocido: ${subcommand}`));
                     console.log(`  ${Colors.dim}Opciones disponibles:${Colors.reset}`);
                     console.log(`    ${Colors.code("ptr config")} - Ver configuración actual`);
                     console.log(`    ${Colors.code("ptr config set-remote <url>")} - Usar registry remoto`);

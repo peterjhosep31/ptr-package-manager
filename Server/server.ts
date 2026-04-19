@@ -13,6 +13,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import cors from "cors";
+import compression from "compression";
 import ROUTER from "./Router/Router.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +25,9 @@ const __dirname = path.dirname(__filename);
  * Configura middleware y rutas para el servidor HTTP.
  */
 const APP = Express();
+
+// Compresión de respuestas
+APP.use(compression());
 
 // Seguridad de cabeceras HTTP
 APP.use(helmet({
@@ -79,18 +84,25 @@ APP.use(Express.json());
 /**
  * Middleware para permitir CORS (acceso desde otros dominios)
  */
-APP.use((_req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env['CORS_ORIGIN'] || '*');
-    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+APP.use(cors({
+    origin: process.env['CORS_ORIGIN'] || '*',
+    methods: ['GET', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 /**
  * Registra el router principal de la aplicación.
  * Todas las rutas definidas en ROUTER estarán disponibles en la aplicación.
  */
 APP.use(ROUTER);
+
+/**
+ * Middleware global para manejo de errores
+ */
+APP.use((err: Error, _req: Express.Request, res: Express.Response, _next: Express.NextFunction) => {
+    console.error("Unhandled error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+});
 
 /**
  * Inicia el servidor en el puerto configurado.

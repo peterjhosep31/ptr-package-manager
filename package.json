@@ -10,6 +10,8 @@
     },
     "devDependencies": {
         "@types/better-sqlite3": "^7.6.13",
+        "@types/compression": "^1.8.1",
+        "@types/cors": "^2.8.19",
         "@types/express": "5.0.5",
         "@types/node": "24.10.1",
         "@typescript-eslint/eslint-plugin": "8.48.1",
@@ -26,7 +28,7 @@
         "build": "tsc && tsup",
         "dev": "NODE_ENV=development nodemon --inspect=9000 --watch Server --watch packages --watch CLI --ext ts,ejs --exec tsx index.ts",
         "dev:local": "NODE_ENV=development tsx index.ts",
-        "start": "node build/index.js",
+        "start": "node dist/index.js",
         "prod:up": "docker compose up -d --build",
         "prod:up:tunnel": "docker compose --profile tunnel up -d --build",
         "prod:up:quick-tunnel": "docker compose --profile quick-tunnel up -d --build",
@@ -53,6 +55,8 @@
     "dependencies": {
         "@types/ejs": "^3.1.5",
         "better-sqlite3": "^12.6.0",
+        "compression": "^1.8.1",
+        "cors": "^2.8.6",
         "ejs": "^5.0.1",
         "express": "5.1.0",
         "express-rate-limit": "^8.3.1",
@@ -63,7 +67,7 @@
         "diff": "^8.0.3"
     },
     "bin": {
-        "ptr": "./dist/cli/index.js"
+        "ptr": "./dist/cli.js"
     },
     "files": [
         "build",

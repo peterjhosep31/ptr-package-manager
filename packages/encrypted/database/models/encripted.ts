@@ -44,4 +44,4 @@ class Encrypted implements Tables {
 
 }
 
-// 02042026
+export default Encrypted;

@@ -1,24 +1,24 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import CustomError from "../../packages/error/Error.ts";
-import Files from "../../packages/files/Files.ts";
-import { arrayEnd } from "../../packages/utils/ArrayUtils.ts";
-import { searchCutEnd } from "../../packages/utils/StringUtils.ts";
-
-// Obtener __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export interface CommandDefinition {
+    command: string;
+    description: string;
+}
 
 class RequestNotProcessed {
 
+    private static readonly COMMAND_LIST: CommandDefinition[] = [
+        { command: "--help, -h", description: "Comando de ayuda: Muestra todos los comandos disponibles" },
+        { command: "init, --I", description: "Comando de inicialización: Crea un nuevo proyecto" },
+        { command: "install, -i", description: "Comando de instalación: Instala un paquete y sus dependencias" },
+        { command: "uninstall, -u", description: "Comando de desinstalación: Remueve un paquete" },
+        { command: "list, -l", description: "Comando de listado: Muestra paquetes instalados o disponibles" },
+        { command: "search, -s", description: "Comando de búsqueda: Busca paquetes en el registro" },
+        { command: "config", description: "Comando de configuración: Gestiona la configuración de PTR" }
+    ];
+
     constructor() {
-        Object.setPrototypeOf(this, RequestNotProcessed.prototype);
     }
 
     getCommands() {
-
-        const COMMANDS = this.readFileRouter();
-
         // Mostrar título
         console.log('\n\x1b[1m\x1b[36m📋 Comandos Disponibles\x1b[0m\n');
         console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m');
@@ -28,50 +28,13 @@ class RequestNotProcessed {
         console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m');
 
         // Mostrar cada comando
-        COMMANDS.forEach((cmd: any) => {
+        RequestNotProcessed.COMMAND_LIST.forEach((cmd: CommandDefinition) => {
             console.log(`  \x1b[1m\x1b[32m${cmd.command.padEnd(15)}\x1b[0m \x1b[90m│\x1b[0m \x1b[37m${cmd.description}\x1b[0m`);
         });
 
         console.log('\x1b[90m' + '─'.repeat(100) + '\x1b[0m\n');
     }
 
-    readFileRouter(): Object[] {
-
-        const FILES = new Files();
-
-        // Leemos el archivo de entrada usando ruta absoluta desde la ubicación del script
-        const CLI_PATH = path.join(__dirname, '../index.ts');
-        const CONTENT: string = FILES.read(CLI_PATH);
-
-        if (CONTENT.length === 0)
-            throw new CustomError('Archivo vacío');
-
-        let copyDescription: string;
-
-        const COMMANDS: Object[] = CONTENT?.split('\n')
-            .filter(
-                line => line.trim() && line.includes('case')
-            ).map(
-                line => {
-
-                    const PARTS: string[] = line.split('"');
-
-                    const COMMANT = PARTS[1];
-                    const endPart = arrayEnd(PARTS);
-                    const DESCRIPTION =
-                        (endPart ? searchCutEnd(endPart, '//') : null) || copyDescription;
-                    copyDescription = DESCRIPTION;
-
-                    return {
-                        command: COMMANT,
-                        description: DESCRIPTION
-                    }
-                });
-
-        return COMMANDS;
-    }
-
 }
-
 
 export default RequestNotProcessed;

@@ -1,11 +1,14 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['CLI/index.ts'],
+  entry: {
+    cli: 'CLI/index.ts',
+    index: 'index.ts'
+  },
   format: ['esm'],
-  target: 'node16',
+  target: 'node20',
   clean: true,
-  outDir: 'dist/cli',
+  outDir: 'dist',
   minify: true,
   outExtension() {
     return {
