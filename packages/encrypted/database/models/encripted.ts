@@ -1,4 +1,4 @@
-import type { Columns, Tables } from "../../../sqlite/interfaces/interfaceModels";
+import type { Columns, Tables } from "../../../sqlite/interfaces/interfaceModels.ts";
 
 class Encrypted implements Tables {
 

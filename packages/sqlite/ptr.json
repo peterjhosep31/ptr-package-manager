@@ -1,8 +1,19 @@
 {
-    "name": "encrypted",
+    "name": "sqlite",
     "version": "1.0.0",
-    "description": "Sistema de encriptación para ptr",
+    "description": "Sistema de gestión de SQLite",
     "main": "index.ts",
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "dependencies": {
+        "directory": "^1.0.0",
+        "error": "^1.0.0",
+        "files": "^1.0.0"
+    },
+    "files": [
+        "index.ts",
+        "DataBase.ts",
+        "interfaces/",
+        "tables/"
+    ]
 }

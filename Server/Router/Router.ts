@@ -2,7 +2,6 @@ import { exec } from "child_process";
 import { Router } from "express";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import { promisify } from "util";
 import Directory from "../../packages/directory/Directory.ts";
 import Files from "../../packages/files/Files.ts";
@@ -11,8 +10,6 @@ import PackagesRouter from "./include/Packages.Router.ts";
 
 const execAsync = promisify(exec);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const DIR = new Directory();
 const FILES = new Files();
@@ -41,7 +38,7 @@ async function ensureReleaseExists(releasePath: string): Promise<boolean> {
         }
 
         // Ejecutar el script de package-release
-        const projectRoot = path.join(__dirname, '../..');
+        const projectRoot = process.cwd();
         const { stdout, stderr } = await execAsync('bash scripts/package-release.sh', {
             cwd: projectRoot
         });
@@ -79,7 +76,7 @@ ROUTER.get('/install', (_req, res) => {
 // Ruta para ver paquetes disponibles
 ROUTER.get('/packages', (_req, res) => {
     const serverUrl = process.env['SERVER_URL'] || 'https://<TU_DOMINIO>';
-    const registryPath = path.join(__dirname, '../../registry.json');
+    const registryPath = path.join(process.cwd(), 'registry.json');
 
     try {
         const registry = JSON.parse(FILES.read(registryPath));
@@ -97,8 +94,8 @@ ROUTER.get('/docs', (_req, res) => {
 
 // Ruta para servir el script de instalación
 ROUTER.get('/install.sh', async (_req, res) => {
-    const installScript = path.join(__dirname, '../../install.sh');
-    const releasePath = path.join(__dirname, '../../releases/latest.tar.gz');
+    const installScript = path.join(process.cwd(), 'install.sh');
+    const releasePath = path.join(process.cwd(), 'releases/latest.tar.gz');
 
     // Asegurar que el release existe antes de servir el script de instalación
     await ensureReleaseExists(releasePath);
@@ -113,7 +110,7 @@ ROUTER.get('/install.sh', async (_req, res) => {
 
 // Ruta para servir el tarball de release
 ROUTER.get('/releases/latest.tar.gz', async (_req, res) => {
-    const releasePath = path.join(__dirname, '../../releases/latest.tar.gz');
+    const releasePath = path.join(process.cwd(), 'releases/latest.tar.gz');
 
     // Asegurar que el release existe y está actualizado
     const releaseReady = await ensureReleaseExists(releasePath);

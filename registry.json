@@ -50,7 +50,8 @@
                 "1.0.0": {
                     "path": "packages/encrypted",
                     "dependencies": {
-                        "error": "^1.0.0"
+                        "error": "^1.0.0",
+                        "sqlite": "^1.0.0"
                     },
                     "published": "2026-01-04T00:00:00.000Z"
                 }
@@ -63,6 +64,20 @@
                     "path": "packages/timestamp",
                     "dependencies": {},
                     "published": "2026-01-04T00:00:00.000Z"
+                }
+            },
+            "latest": "1.0.0"
+        },
+        "sqlite": {
+            "versions": {
+                "1.0.0": {
+                    "path": "packages/sqlite",
+                    "dependencies": {
+                        "directory": "^1.0.0",
+                        "error": "^1.0.0",
+                        "files": "^1.0.0"
+                    },
+                    "published": "2026-04-19T00:00:00.000Z"
                 }
             },
             "latest": "1.0.0"

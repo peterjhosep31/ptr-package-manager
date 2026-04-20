@@ -10,15 +10,12 @@
 
 import Express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import compression from "compression";
 import ROUTER from "./Router/Router.ts";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Instancia de la aplicación Express.
@@ -48,32 +45,32 @@ APP.use(limiter);
  * Configuración del motor de plantillas EJS
  */
 APP.set('view engine', 'ejs');
-APP.set('views', path.join(__dirname, 'views'));
+APP.set('views', path.join(process.cwd(), 'Server/views'));
 
 /**
  * Middleware para servir archivos estáticos CSS
  */
-APP.use('/styles', Express.static(path.join(__dirname, 'views/styles')));
+APP.use('/styles', Express.static(path.join(process.cwd(), 'Server/views/styles')));
 
 /**
  * Middleware para servir archivos estáticos JavaScript
  */
-APP.use('/scripts', Express.static(path.join(__dirname, 'views/scripts')));
+APP.use('/scripts', Express.static(path.join(process.cwd(), 'Server/views/scripts')));
 
 /**
  * Middleware para servir archivos estáticos (assets: imágenes, iconos, etc.)
  */
-APP.use('/assets', Express.static(path.join(__dirname, 'views/assets')));
+APP.use('/assets', Express.static(path.join(process.cwd(), 'Server/views/assets')));
 
 /**
  * Rutas para SEO
  */
 APP.get('/robots.txt', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'views/robots.txt'));
+    res.sendFile(path.join(process.cwd(), 'Server/views/robots.txt'));
 });
 
 APP.get('/sitemap.xml', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'views/sitemap.xml'));
+    res.sendFile(path.join(process.cwd(), 'Server/views/sitemap.xml'));
 });
 
 /**
